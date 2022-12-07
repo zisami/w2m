@@ -65,4 +65,4 @@
 	};
 </script>
 
-<div class="button" on:click={onActivate}>Wool Tool</div>
+<div class="button" on:click={onActivate} on:keydown={onActivate}>Wool Tool</div>
