@@ -31,6 +31,10 @@
 		if (!$state3D?.model?.scale) {
 			$state3D.model.scale = 0.01;
 		}
+		loader.load(svgFilePath, (svg) => {
+			shapesFromPaths = svg.paths.map((path) => SVGLoader.createShapes(path));
+			console.log(shapesFromPaths);
+		});
 	});
 	const scale = spring(0.001);
 	const loader = useLoader(SVGLoader, () => new SVGLoader());
@@ -40,10 +44,6 @@
 	}
 	let shapesFromPaths;
 	$: $sheep, svgToShapes();
-	loader.load(svgFilePath, (svg) => {
-		shapesFromPaths = svg.paths.map((path) => SVGLoader.createShapes(path));
-		console.log(shapesFromPaths);
-	});
 
 	const colors = ['white', 'black'];
 
@@ -69,7 +69,7 @@
 		<Float speed={1}>
 			<!-- sheep -->
 			<T.Group
-				scale={$state3D.model.scale  * -1}
+				scale={$state3D.model.scale * -1}
 				position={$state3D.model.position}
 				rotation={$state3D.model.rotation}
 			>
@@ -79,7 +79,7 @@
 
 		<WorldSetup />
 	</Canvas>
-	{:else}
+{:else}
 	<div class="container grid place-content-center h-screen w-screen bg-orange-300 ">
 		<img src={svgFilePath} alt="comic-sheep" class="w-8" />
 		getting a sheep for you...
