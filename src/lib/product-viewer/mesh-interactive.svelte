@@ -10,7 +10,7 @@
     export let index = 0;
 
 	function toggleEditorPane() {
-		$state.hideEditorPane = !$state.hideEditorPane;
+		$state.showEditorPane = !$state.showEditorPane;
 	}
 	//console.log(shape);
 </script>

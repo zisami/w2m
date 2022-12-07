@@ -4,13 +4,13 @@
 	import MdClose from 'svelte-icons/md/MdClose.svelte'
 
 	function toggleEditorPane() {
-		$state.hideEditorPane = !$state.hideEditorPane;
+		$state.showEditorPane = !$state.showEditorPane;
 	}
 </script>
 
-{#if !$state.hideEditorPane}
+{#if $state.showEditorPane}
 	<div
-		class="w-screen container absolute px-4 bottom-0 h-1/2 grid left-1/2 transform -translate-x-1/2 "
+		class="container absolute px-4 bottom-0 h-1/2 grid left-1/2 transform -translate-x-1/2 "
 		transition:fly={{ y: 200, duration: 800 }}
 	>
 		<div class=" bg-slate-100 rounded-t-2xl p-4 pb-0 bottom-0 relative">

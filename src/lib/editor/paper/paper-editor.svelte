@@ -13,7 +13,7 @@
 </script>
 
 <div class="w-full h-full flex flex-col border-red-500 border">
-	<canvas id="myCanvas" class="bg-amber-300 aspect-[2/1.8]" />
+	<canvas id="myCanvas" class="bg-amber-300 aspect-[2/1.8] max-w-md" />
 
 	<PaperTools />
 </div>

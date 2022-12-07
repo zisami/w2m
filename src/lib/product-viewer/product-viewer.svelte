@@ -23,7 +23,7 @@
 			$state3D.model = {};
 		}
 		if (!$state3D?.model?.position) {
-			$state3D.model.position = [-0.75, 1.5, 0];
+			$state3D.model.position = [-0.75, 2, 0];
 		}
 		if (!$state3D?.model?.rotation) {
 			$state3D.model.rotation = [0, degToRad(-150), 0];
@@ -48,7 +48,7 @@
 	const colors = ['white', 'black'];
 
 	function toggleEditorPane() {
-		$state.hideEditorPane = !$state.hideEditorPane;
+		$state.showEditorPane = $state.showEditorPane;
 	}
 	function svgToShapes() {
 		if ($sheep.svg) {

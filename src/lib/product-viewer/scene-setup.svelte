@@ -1,14 +1,14 @@
 <script>
+	import { onMount } from 'svelte';
 	import { OrbitControls, T } from '@threlte/core';
 	import { degToRad } from 'three/src/math/MathUtils';
-	//import state3D from '$lib/stores/state3D.js';
-
+	import { state3D } from '$lib/stores/state3D.js';
 	const model = {
 		position: [0.75, 1.5, 0]
 	};
 </script>
 
-<T.PerspectiveCamera makeDefault position={[8, 2, 8]} fov={20}>
+<T.PerspectiveCamera makeDefault position={[8, 3, 8]} fov={30}>
 	<OrbitControls
 		minPolarAngle={degToRad(50)}
 		maxPolarAngle={degToRad(80)}
