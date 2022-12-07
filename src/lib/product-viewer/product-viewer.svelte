@@ -38,7 +38,7 @@
 	if (typeof window !== 'undefined') {
 		serializer = new XMLSerializer();
 	}
-	let shapesFromPaths: Shape[];
+	let shapesFromPaths;
 	$: $sheep, svgToShapes();
 	loader.load(svgFilePath, (svg) => {
 		shapesFromPaths = svg.paths.map((path) => SVGLoader.createShapes(path));
@@ -79,9 +79,9 @@
 
 		<WorldSetup />
 	</Canvas>
-{:else}
+	{:else}
 	<div class="container grid place-content-center h-screen w-screen bg-orange-300 ">
-		<img src="/src/lib/assets/img/sheep.svg" alt="comic-sheep" class="w-8" />
+		<img src={svgFilePath} alt="comic-sheep" class="w-8" />
 		getting a sheep for you...
 	</div>
 {/if}
