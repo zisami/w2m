@@ -1,13 +1,13 @@
 <script>
-	import {  InteractiveObject, T } from '@threlte/core';
+	import { InteractiveObject, T } from '@threlte/core';
 	import { spring } from 'svelte/motion';
 	import { state } from '$lib/stores/state.js';
 
 	const scale = spring(0.001);
 	const colors = ['white', 'black'];
 
-    export let shape;
-    export let index = 0;
+	export let shape;
+	export let index = 0;
 
 	function toggleEditorPane() {
 		$state.showEditorPane = !$state.showEditorPane;

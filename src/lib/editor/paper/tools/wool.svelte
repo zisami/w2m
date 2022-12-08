@@ -4,8 +4,7 @@
 	import { sheep } from '$lib/stores/sheep.js';
 
 	onMount(() => {
-
-        console.log('mout wool');
+		console.log('mout wool');
 		const tool = new paper.Tool();
 		tool.name = 'wool';
 
@@ -55,8 +54,8 @@
 				$sheep.svg = paper.project.exportSVG();
 			}
 		};
-        
-        tool.activate();
+
+		tool.activate();
 	});
 	const onActivate = () => {
 		//console.log('onActivateWool', paper.tool);

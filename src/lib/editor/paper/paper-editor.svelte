@@ -9,7 +9,6 @@
 		paper.setup(canvas);
 		paper.view.draw();
 	});
-
 </script>
 
 <div class="w-full h-full flex flex-col border-red-500 border">

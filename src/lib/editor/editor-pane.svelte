@@ -1,7 +1,7 @@
 <script>
 	import { fly } from 'svelte/transition';
 	import { state } from '$lib/stores/state.js';
-	import MdClose from 'svelte-icons/md/MdClose.svelte'
+	import MdClose from 'svelte-icons/md/MdClose.svelte';
 
 	function toggleEditorPane() {
 		$state.showEditorPane = !$state.showEditorPane;
@@ -19,7 +19,7 @@
 				on:click={toggleEditorPane}
 				on:keydown={toggleEditorPane}
 			>
-				<MdClose/>
+				<MdClose />
 			</div>
 			<slot />
 		</div>
