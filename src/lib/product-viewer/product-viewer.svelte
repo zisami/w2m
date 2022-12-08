@@ -1,21 +1,18 @@
 <script>
 	import { onMount } from 'svelte';
-	import MeshInteractive from './mesh-interactive.svelte';
-	import ShapesLooper from './shapes-looper.svelte';
-
-	import WorldSetup from './world-setup.svelte';
-	import SceneSetup from './scene-setup.svelte';
-	import { state3D } from '$lib/stores/state3D.js';
-	import { Canvas, InteractiveObject, T, useLoader } from '@threlte/core';
 	import { spring } from 'svelte/motion';
-	import { degToRad } from 'three/src/math/MathUtils';
 
+	import { Canvas, T, useLoader } from '@threlte/core';
+	import { degToRad } from 'three/src/math/MathUtils';
 	import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader.js';
 	import { Float } from '@threlte/extras';
 
-	import { state } from '$lib/stores/state.js';
-	import { sheep } from '$lib/stores/sheep.js';
+	import ShapesLooper from './shapes-looper.svelte';
+	import WorldSetup from './world-setup.svelte';
+	import SceneSetup from './scene-setup.svelte';
 
+	import { state3D } from '$lib/stores/state3D.js';
+	import { sheep } from '$lib/stores/sheep.js';
 	import svgFilePath from '$lib/assets/img/sheep.svg';
 
 	onMount(() => {
@@ -29,14 +26,13 @@
 			$state3D.model.rotation = [0, degToRad(-150), 0];
 		}
 		if (!$state3D?.model?.scale) {
-			$state3D.model.scale = 0.01;
+			$state3D.model.scale = spring(0.01);
 		}
 		loader.load(svgFilePath, (svg) => {
 			shapesFromPaths = svg.paths.map((path) => SVGLoader.createShapes(path));
 			console.log(shapesFromPaths);
 		});
 	});
-	const scale = spring(0.001);
 	const loader = useLoader(SVGLoader, () => new SVGLoader());
 	let serializer;
 	if (typeof window !== 'undefined') {
@@ -45,11 +41,6 @@
 	let shapesFromPaths;
 	$: $sheep, svgToShapes();
 
-	const colors = ['white', 'black'];
-
-	function toggleEditorPane() {
-		$state.showEditorPane = $state.showEditorPane;
-	}
 	function svgToShapes() {
 		if ($sheep.svg) {
 			//console.log($sheep.svg);
