@@ -23,5 +23,5 @@
 		on:pointerup={() => ($scale = 0.01)}
 	/>
 	<T.ExtrudeGeometry args={[shape, { depth: 50 }]} />
-	<T.MeshStandardMaterial color={colors[index]}  side={2}/>
+	<T.MeshStandardMaterial color={colors[index]} side={2} />
 </T.Mesh>

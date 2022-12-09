@@ -45,9 +45,9 @@
 				const outline = paper.project.activeLayer.lastChild;
 				outline.fillColor = 'grey';
 				paper.project.activeLayer.children = [outline];
-				const cSize = getCanvasSize(event.event.originalTarget)
+				const cSize = getCanvasSize(event.event.originalTarget);
 				const targetWidth = 200;
-				const scale = targetWidth / cSize.width
+				const scale = targetWidth / cSize.width;
 				$sheep.svg = paper.project.exportSVG();
 				//$sheep.svg.scale(scale)
 			}

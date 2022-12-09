@@ -59,11 +59,7 @@
 
 		<Float speed={1}>
 			<!-- sheep -->
-			<T.Group
-				scale={-0.01}
-				position={[-1, 2, 0]}
-				rotation={[0, degToRad(-150), 0]}
-			>
+			<T.Group scale={-0.01} position={[-1, 2, 0]} rotation={[0, degToRad(-150), 0]}>
 				<ShapesLooper shapes={shapesFromPaths} />
 			</T.Group>
 		</Float>
