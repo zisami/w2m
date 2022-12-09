@@ -26,33 +26,7 @@
 		tool.onMouseDrag = function (event) {
 			//only on the frist point
 			if (!path?.segments[1]) {
-				const d = getDrawingDirection(event.downPoint, event.point);
-				console.log(d);
-				const q = getQadrant(getCanvasSize(event.event.originalTarget), event.downPoint);
-				console.log(q);
-				console.log(flipArc);
-				flipArc = false;
-				if (q === 'UL') {
-					if (d.right && d.up) {
-						flipArc = true
-					}
-				}
-				if (q === 'UR') {
-					if (d.right && d.down) {
-						flipArc = true
-					}
-				}
-				if (q === 'LR') {
-					if (d.left && d.down) {
-						flipArc = true
-					}
-				}
-				if (q === 'LL') {
-					if (d.left && d.up) {
-						flipArc = true
-					}
-				}
-				console.log(flipArc);
+				flipArc = getArcFlip(event);
 			}
 			path.arcTo(event.point, flipArc);
 		};
@@ -71,7 +45,11 @@
 				const outline = paper.project.activeLayer.lastChild;
 				outline.fillColor = 'grey';
 				paper.project.activeLayer.children = [outline];
+				const cSize = getCanvasSize(event.event.originalTarget)
+				const targetWidth = 200;
+				const scale = targetWidth / cSize.width
 				$sheep.svg = paper.project.exportSVG();
+				//$sheep.svg.scale(scale)
 			}
 		};
 
@@ -98,6 +76,24 @@
 		const left = point.x < size.width / 2;
 		const upper = point.y < size.height / 2;
 		return `${upper ? 'U' : 'L'}${left ? 'L' : 'R'}`;
+	}
+	function getArcFlip(event) {
+		const d = getDrawingDirection(event.downPoint, event.point);
+		const q = getQadrant(getCanvasSize(event.event.originalTarget), event.downPoint);
+		let flipArc = false;
+		if (q === 'UL' && d.right && d.up) {
+			flipArc = true;
+		}
+		if (q === 'UR' && d.right && d.down) {
+			flipArc = true;
+		}
+		if (q === 'LR' && d.left && d.down) {
+			flipArc = true;
+		}
+		if (q === 'LL' && d.left && d.up) {
+			flipArc = true;
+		}
+		return flipArc;
 	}
 </script>
 
