@@ -60,9 +60,9 @@
 		<Float speed={1}>
 			<!-- sheep -->
 			<T.Group
-				scale={$state3D.model.scale * -1}
-				position={$state3D.model.position}
-				rotation={$state3D.model.rotation}
+				scale={-0.01}
+				position={[-1, 2, 0]}
+				rotation={[0, degToRad(-150), 0]}
 			>
 				<ShapesLooper shapes={shapesFromPaths} />
 			</T.Group>

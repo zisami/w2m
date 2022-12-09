@@ -3,7 +3,7 @@
 	import { spring } from 'svelte/motion';
 	import { state } from '$lib/stores/state.js';
 
-	const scale = spring(0.001);
+	const scale = spring(0.01);
 	const colors = ['white', 'black'];
 
 	export let shape;
@@ -12,7 +12,7 @@
 	function toggleEditorPane() {
 		$state.showEditorPane = !$state.showEditorPane;
 	}
-	//console.log(shape);
+	console.log(shape);
 </script>
 
 <T.Mesh castShadow let:ref>
@@ -20,7 +20,7 @@
 		object={ref}
 		interactive
 		on:click={toggleEditorPane}
-		on:pointerup={() => ($scale = 0.001)}
+		on:pointerup={() => ($scale = 0.01)}
 	/>
 	<T.ExtrudeGeometry args={[shape, { depth: 50 }]} />
 	<T.MeshStandardMaterial color={colors[index]} />
