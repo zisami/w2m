@@ -12,7 +12,7 @@
 	function toggleEditorPane() {
 		$state.showEditorPane = !$state.showEditorPane;
 	}
-	console.log(shape);
+	//console.log(shape);
 </script>
 
 <T.Mesh castShadow let:ref>
@@ -23,5 +23,5 @@
 		on:pointerup={() => ($scale = 0.01)}
 	/>
 	<T.ExtrudeGeometry args={[shape, { depth: 50 }]} />
-	<T.MeshStandardMaterial color={colors[index]} />
+	<T.MeshStandardMaterial color={colors[index]}  side={2}/>
 </T.Mesh>

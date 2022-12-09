@@ -10,7 +10,7 @@
 
 		let path;
 		let startPoint;
-		let flipArc = true;
+		let flipArc = false;
 		tool.minDistance = 5;
 		tool.maxDistance = 40;
 		tool.onMouseDown = (event) => {
@@ -24,16 +24,36 @@
 		};
 
 		tool.onMouseDrag = function (event) {
-			if (!path.segments[1]) {
-				flipArc = path.segments[0].point.x - event.point.x < 0;
-				/*console.log(
-					'first',
-					path.segments[0].point.x,
-					event.point.x,
-					path.segments[0].point.x - event.point.x
-				);*/
+			//only on the frist point
+			if (!path?.segments[1]) {
+				const d = getDrawingDirection(event.downPoint, event.point);
+				console.log(d);
+				const q = getQadrant(getCanvasSize(event.event.originalTarget), event.downPoint);
+				console.log(q);
+				console.log(flipArc);
+				flipArc = false;
+				if (q === 'UL') {
+					if (d.right && d.up) {
+						flipArc = true
+					}
+				}
+				if (q === 'UR') {
+					if (d.right && d.down) {
+						flipArc = true
+					}
+				}
+				if (q === 'LR') {
+					if (d.left && d.down) {
+						flipArc = true
+					}
+				}
+				if (q === 'LL') {
+					if (d.left && d.up) {
+						flipArc = true
+					}
+				}
+				console.log(flipArc);
 			}
-			//console.log(flipArc);
 			path.arcTo(event.point, flipArc);
 		};
 
@@ -62,6 +82,23 @@
 		const tool = paper.tools.find((tool) => tool.name === 'wool');
 		tool.activate();
 	};
+	function getCanvasSize(canvas) {
+		return { width: canvas.width, height: canvas.height };
+	}
+	function getDrawingDirection(pointA, pointB) {
+		return {
+			left: pointA.x - pointB.x >= 0,
+			right: pointA.x - pointB.x < 0,
+			up: pointA.y - pointB.y >= 0,
+			down: pointA.y - pointB.y < 0
+		};
+	}
+	function getQadrant(size, point) {
+		console.log(size, point);
+		const left = point.x < size.width / 2;
+		const upper = point.y < size.height / 2;
+		return `${upper ? 'U' : 'L'}${left ? 'L' : 'R'}`;
+	}
 </script>
 
 <div class="button" on:click={onActivate} on:keydown={onActivate}>Wool Tool</div>

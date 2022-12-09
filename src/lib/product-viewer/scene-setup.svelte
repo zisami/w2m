@@ -6,7 +6,13 @@
 
 <T.PerspectiveCamera makeDefault position={[8, 3, 8]} fov={30}>
 	<OrbitControls
-
+		minPolarAngle={degToRad(50)}
+		maxPolarAngle={degToRad(80)}
+		minAzimuthAngle={degToRad(-30)}
+		maxAzimuthAngle={degToRad(90)}
+		enableZoom={true}
+		maxDistance={150}
+		target={$state3D.model.position}
 		enableDamping
 	/>
 </T.PerspectiveCamera>
