@@ -1,6 +1,5 @@
 <script>
 	import { onMount } from 'svelte';
-	import { spring } from 'svelte/motion';
 
 	import { Canvas, T, useLoader } from '@threlte/core';
 	import { degToRad } from 'three/src/math/MathUtils';
@@ -11,23 +10,11 @@
 	import WorldSetup from './world-setup.svelte';
 	import SceneSetup from './scene-setup.svelte';
 
-	import { state3D } from '$lib/stores/state3D.js';
+	import { state3D } from '$lib/product-viewer/state3D.js';
 	import { sheep } from '$lib/stores/sheep.js';
 	import svgFilePath from '$lib/assets/img/sheep.svg';
 
 	onMount(() => {
-		if (!$state3D?.model) {
-			$state3D.model = {};
-		}
-		if (!$state3D?.model?.position) {
-			$state3D.model.position = [-0.75, 2, 0];
-		}
-		if (!$state3D?.model?.rotation) {
-			$state3D.model.rotation = [0, degToRad(-150), 0];
-		}
-		if (!$state3D?.model?.scale) {
-			$state3D.model.scale = spring(0.01);
-		}
 		loader.load(svgFilePath, (svg) => {
 			shapesFromPaths = svg.paths.map((path) => SVGLoader.createShapes(path));
 			console.log(shapesFromPaths);
@@ -59,7 +46,8 @@
 
 		<Float speed={1}>
 			<!-- sheep -->
-			<T.Group scale={-0.01} position={[-1, 2, 0]} rotation={[0, degToRad(-150), 0]}>
+			{console.log($state3D)}
+			<T.Group scale={$state3D.model.scale} position={[-1, 2, 0]} rotation={[0, degToRad(-150), 0]}>
 				<ShapesLooper shapes={shapesFromPaths} />
 			</T.Group>
 		</Float>

@@ -1,17 +1,16 @@
 <script>
 	import { T } from '@threlte/core';
-
-	import { degToRad } from 'three/src/math/MathUtils';
+	import { state3D } from '$lib/product-viewer/state3D.js';
 </script>
 
 <!-- Floor -->
-<T.Mesh receiveShadow rotation.x={degToRad(-90)}>
-	<T.CircleGeometry args={[10, 72]} />
-	<T.MeshStandardMaterial color="darkgreen" />
+<T.Mesh receiveShadow rotation.x={$state3D.world.floor.rotation.x}>
+	<T.CircleGeometry args={$state3D.world.floor.args} />
+	<T.MeshStandardMaterial color={$state3D.world.floor.color} side={2} />
 </T.Mesh>
 
 <!-- Sky -->
-<T.Mesh receiveShadow rotation.z={degToRad(-90)}>
-	<T.SphereGeometry args={[10, 36, 18]} />
-	<T.MeshStandardMaterial color="#87ceeb" side={1} />
+<T.Mesh receiveShadow rotation.z={$state3D.world.sky.rotation.z}>
+	<T.SphereGeometry args={$state3D.world.sky.args} />
+	<T.MeshStandardMaterial color={$state3D.world.sky.color} side={1} />
 </T.Mesh>

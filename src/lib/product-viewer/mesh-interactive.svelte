@@ -2,6 +2,7 @@
 	import { InteractiveObject, T } from '@threlte/core';
 	import { spring } from 'svelte/motion';
 	import { state } from '$lib/stores/state.js';
+	import { state3D } from '$lib/product-viewer/state3D.js';
 
 	const scale = spring(0.01);
 	const colors = ['white', 'black'];
@@ -22,6 +23,6 @@
 		on:click={toggleEditorPane}
 		on:pointerup={() => ($scale = 0.01)}
 	/>
-	<T.ExtrudeGeometry args={[shape, { depth: 50 }]} />
+	<T.ExtrudeGeometry args={[shape, { depth: $state3D.model.depth }]} />
 	<T.MeshStandardMaterial color={colors[index]} side={2} />
 </T.Mesh>

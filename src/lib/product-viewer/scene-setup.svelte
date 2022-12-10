@@ -1,22 +1,24 @@
 <script>
 	import { OrbitControls, T } from '@threlte/core';
-	import { degToRad } from 'three/src/math/MathUtils';
-	import { state3D } from '$lib/stores/state3D.js';
+	import { state3D } from '$lib/product-viewer/state3D.js';
 </script>
 
-<T.PerspectiveCamera makeDefault position={[8, 3, 8]} fov={30}>
+<T.PerspectiveCamera makeDefault position={$state3D.camera.position} fov={$state3D.camera.fov}>
 	<OrbitControls
-		minPolarAngle={degToRad(50)}
-		maxPolarAngle={degToRad(80)}
-		minAzimuthAngle={degToRad(-30)}
-		maxAzimuthAngle={degToRad(90)}
-		enableZoom={true}
-		maxDistance={150}
+		minPolarAngle={$state3D.OrbitControls.minPolarAngle}
+		maxPolarAngle={$state3D.OrbitControls.maxPolarAngle}
+		minAzimuthAngle={$state3D.OrbitControls.minAzimuthAngle}
+		maxAzimuthAngle={$state3D.OrbitControls.maxAzimuthAngle}
+		enableZoom={$state3D.OrbitControls.enableZoom}
+		maxDistance={$state3D.OrbitControls.maxDistance}
 		target={$state3D.model.position}
-		enableDamping
+		enableDamping={$state3D.OrbitControls.enableZoom}
 	/>
 </T.PerspectiveCamera>
 
-<T.DirectionalLight castShadow position={[-1, 10, 10]} />
+<T.DirectionalLight
+	castShadow={$state3D.dirLights[0].castShadow}
+	position={$state3D.dirLights[0].position}
+/>
 
 <T.AmbientLight intensity={0.2} />

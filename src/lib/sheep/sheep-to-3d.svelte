@@ -4,11 +4,12 @@
 	if (typeof window !== 'undefined' && $sheep?.svg) {
 		let serializer = new XMLSerializer();
 		sheepSVG = serializer?.serializeToString($sheep.svg);
+		console.log(sheepSVG, sheepSVG);
 	}
 </script>
 
 {#if sheepSVG}
-	<div id="sheepSVG">
+	<div id="sheepSVG" class="absolute ">
 		{@html sheepSVG}
 	</div>
 {/if}
