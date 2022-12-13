@@ -6,6 +6,7 @@ export const state3D = writable({
 		position: [-0.75, 2, 0],
 		rotation: [0, degToRad(-150), 0],
 		scale: -0.01,
+		baseScale: -0.01,
 		depth: 25
 	},
 	camera: {

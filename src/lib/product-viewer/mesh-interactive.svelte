@@ -3,6 +3,7 @@
 	import { spring } from 'svelte/motion';
 	import { state } from '$lib/stores/state.js';
 	import { state3D } from '$lib/product-viewer/state3D.js';
+	import { sheep } from '$lib/stores/sheep.js';
 
 	const scale = spring(0.01);
 	const colors = ['white', 'black'];
@@ -24,5 +25,6 @@
 		on:pointerup={() => ($scale = 0.01)}
 	/>
 	<T.ExtrudeGeometry args={[shape, { depth: $state3D.model.depth }]} />
-	<T.MeshStandardMaterial color={colors[index]} side={2} />
+	<T.MeshStandardMaterial color={'#' + $sheep?.colors?.[index]?.getHexString()} side={2} />
+	{console.log($sheep?.colors?.[index]?.getHexString(), index)}
 </T.Mesh>

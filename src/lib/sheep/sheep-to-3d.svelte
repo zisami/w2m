@@ -9,7 +9,7 @@
 </script>
 
 {#if sheepSVG}
-	<div id="sheepSVG" class="absolute ">
+	<div id="sheepSVG" class=" ">
 		{@html sheepSVG}
 	</div>
 {/if}

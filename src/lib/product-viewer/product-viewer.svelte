@@ -16,8 +16,10 @@
 
 	onMount(() => {
 		loader.load(svgFilePath, (svg) => {
+			$sheep.colors = svg.paths.map(path => path.color);
 			shapesFromPaths = svg.paths.map((path) => SVGLoader.createShapes(path));
 			console.log(shapesFromPaths);
+			console.log('$sheep.colors',$sheep.colors);
 		});
 	});
 	const loader = useLoader(SVGLoader, () => new SVGLoader());
@@ -30,12 +32,12 @@
 
 	function svgToShapes() {
 		if ($sheep.svg) {
-			//console.log($sheep.svg);
-
 			const svg = $sheep.svg.outerHTML;
-			//console.log(svg);
 			shapesFromPaths = [loader.parse(svg)?.paths?.map((path) => path?.toShapes())];
-			console.log(shapesFromPaths);
+			if($sheep?.scaleingFactor){
+				console.log('scale to fit', $sheep.scaleingFactor);
+				$state3D.model.scale = $state3D.model.baseScale * $sheep.scaleingFactor;
+			}
 		}
 	}
 </script>

@@ -4,7 +4,6 @@
 	import { sheep } from '$lib/stores/sheep.js';
 
 	onMount(() => {
-		console.log('mout wool');
 		const tool = new paper.Tool();
 		tool.name = 'wool';
 
@@ -32,7 +31,6 @@
 		};
 
 		tool.onMouseUp = function (event) {
-			console.log(event);
 			//mouse must be moved from the start point to close the path
 			if (event.point.x !== startPoint.x && event.point.y !== startPoint.y) {
 				path.arcTo(event.point, flipArc);
@@ -47,6 +45,7 @@
 				paper.project.activeLayer.children = [outline];
 				const cSize = getCanvasSize(event.event.originalTarget);
 				const targetWidth = 200;
+				//console.log('cSize', cSize);
 				$sheep.scaleingFactor = targetWidth / cSize.width;
 				$sheep.svg = paper.project.exportSVG();
 			}
@@ -55,7 +54,6 @@
 		tool.activate();
 	});
 	const onActivate = () => {
-		//console.log('onActivateWool', paper.tool);
 		const tool = paper.tools.find((tool) => tool.name === 'wool');
 		tool.activate();
 	};
@@ -71,7 +69,6 @@
 		};
 	}
 	function getQadrant(size, point) {
-		console.log(size, point);
 		const left = point.x < size.width / 2;
 		const upper = point.y < size.height / 2;
 		return `${upper ? 'U' : 'L'}${left ? 'L' : 'R'}`;
