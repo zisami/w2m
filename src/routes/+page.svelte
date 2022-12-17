@@ -19,7 +19,7 @@
 	{#if paperEditor}
 		<svelte:component this={paperEditor} />
 	{/if}
-	<SheepTo3d />
+
 	<EditorTypeButtons />
 </EditorPane>
 

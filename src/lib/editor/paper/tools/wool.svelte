@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import paper from 'paper';
 	import { sheep } from '$lib/stores/sheep.js';
-
+	import { getLayerByName } from '../helpers';
 	onMount(() => {
 		const tool = new paper.Tool();
 		tool.name = 'wool';
@@ -14,7 +14,7 @@
 		tool.maxDistance = 40;
 		tool.onMouseDown = (event) => {
 			//console.clear();
-			paper.project.activeLayer.children = [];
+			//paper.project.activeLayer.children = [];
 			path = new paper.Path();
 			path.strokeColor = 'black';
 			path.add(event.point);
@@ -42,6 +42,7 @@
 				bounds.intersect(path);
 				const outline = paper.project.activeLayer.lastChild;
 				outline.fillColor = 'grey';
+				console.log('aL:',paper.project.activeLayer.name);
 				paper.project.activeLayer.children = [outline];
 				const cSize = getCanvasSize(event.event.originalTarget);
 				const targetWidth = 200;
@@ -55,7 +56,11 @@
 	});
 	const onActivate = () => {
 		const tool = paper.tools.find((tool) => tool.name === 'wool');
-		tool.activate();
+		if (tool) {
+			tool.activate();
+		}
+		const bodyLayer = getLayerByName('body');
+		bodyLayer?.activate();
 	};
 	function getCanvasSize(canvas) {
 		return { width: canvas.width, height: canvas.height };

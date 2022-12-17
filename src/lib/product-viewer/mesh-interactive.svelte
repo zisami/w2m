@@ -25,6 +25,5 @@
 		on:pointerup={() => ($scale = 0.01)}
 	/>
 	<T.ExtrudeGeometry args={[shape, { depth: $state3D.model.depth }]} />
-	<T.MeshStandardMaterial color={'#' + $sheep?.colors?.[index]?.getHexString()} side={2} />
-	{console.log($sheep?.colors?.[index]?.getHexString(), index)}
+	<T.MeshStandardMaterial color={'#' + ($sheep?.colors?.[index]?.getHexString() || 'FFFFFF')} side={2} />
 </T.Mesh>

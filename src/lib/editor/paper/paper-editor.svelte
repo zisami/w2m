@@ -1,18 +1,17 @@
-<script>
-	import { onMount } from 'svelte';
+<script lang="ts">
 	import paper from 'paper';
 	import PaperTools from './paper-tools.svelte';
+	import { setupSheep } from './setup';
 
-	onMount(() => {
-		console.log('the component has mounted');
-		var canvas = document.getElementById('myCanvas');
+	function usePaper(canvas: HTMLCanvasElement) {
 		paper.setup(canvas);
-		paper.view.draw();
-	});
+		setupSheep();
+		paper.view.update();
+	}
 </script>
 
 <div class="w-full h-full flex flex-col border-red-500 border">
-	<canvas id="myCanvas" class="bg-amber-300 aspect-[2/1.8] max-w-md" />
+	<canvas class="bg-amber-300 aspect-[2/1.8] max-w-md" use:usePaper />
 
 	<PaperTools />
 </div>
