@@ -1,11 +1,12 @@
 import paper from 'paper';
 import head from '$lib/sheep/head.svg';
 import skeleton from '$lib/sheep/skeletonDots.svg';
-
+import { onFrame } from './editor';
 export async function setupSheep(): Promise<void> {
-	addBody();
 	importSkelletonDots();
+	addBody();
 	importHead();
+	onFrame();
 	console.log(paper.project.layers);
 }
 
@@ -24,7 +25,7 @@ function importSkelletonDots() {
 
 		const skeletonDotsLayer = item.children.find((c) => c.name === 'skeletonDotsLayer');
 		if (skeletonDotsLayer) {
-			layer.children = skeletonDotsLayer.children;
+			//	layer.children = skeletonDotsLayer.children;
 		}
 		//console.log(svgData);
 	});
