@@ -1,18 +1,18 @@
-<script>
-	import { InteractiveObject, T } from '@threlte/core';
+<script lang="ts">
+	import { InteractiveObject, T, Three } from '@threlte/core';
 	import { spring } from 'svelte/motion';
-	import { state } from '$lib/stores/state.js';
-	import { state3D } from '$lib/product-viewer/state3D.js';
-	import { sheep } from '$lib/stores/sheep.js';
+	import { stateUi } from '$lib/stores/stateUi';
+	import { state3D } from '$lib/product-viewer/state3D';
+	import { sheep } from '$lib/stores/sheep';
 
 	const scale = spring(0.01);
 	const colors = ['white', 'black'];
 
-	export let shape;
+	export let shape: T.Shape;
 	export let index = 0;
 
 	function toggleEditorPane() {
-		$state.showEditorPane = !$state.showEditorPane;
+		$stateUi.showEditorPane = !$stateUi.showEditorPane;
 	}
 	//console.log(shape);
 </script>

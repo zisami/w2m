@@ -1,6 +1,6 @@
 <script>
 	import { T } from '@threlte/core';
-	import { state3D } from '$lib/product-viewer/state3D.js';
+	import { state3D } from '$lib/product-viewer/state3D';
 </script>
 
 <!-- Floor -->

@@ -1,5 +1,5 @@
 <script>
-	import { sheep } from '$lib/stores/sheep.js';
+	import { sheep } from '$lib/stores/sheep.ts';
 	let sheepSVG;
 	if (typeof window !== 'undefined' && $sheep?.svg) {
 		let serializer = new XMLSerializer();

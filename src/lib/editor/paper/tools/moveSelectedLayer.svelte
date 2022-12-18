@@ -4,7 +4,7 @@
     import { getLayerByName } from '../helpers';
 
 	interface moveLayer extends paper.Tool {
-		name?: string;
+		name: string;
 	}
 
 	const toolName: string = 'moveLayer';

@@ -1,14 +1,14 @@
-<script>
+<script lang="ts">
 	import { fly } from 'svelte/transition';
-	import { state } from '$lib/stores/state.js';
+	import { stateUi } from '$lib/stores/stateUi';
 	import MdClose from 'svelte-icons/md/MdClose.svelte';
 
 	function toggleEditorPane() {
-		$state.showEditorPane = !$state.showEditorPane;
+		$stateUi.showEditorPane = !$stateUi.showEditorPane;
 	}
 </script>
 
-{#if $state.showEditorPane}
+{#if $stateUi.showEditorPane}
 	<div
 		class="container absolute px-4 bottom-0 h-1/2 grid left-1/2 transform -translate-x-1/2 "
 		transition:fly={{ y: 200, duration: 800 }}

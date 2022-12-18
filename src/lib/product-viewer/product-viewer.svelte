@@ -10,8 +10,8 @@
 	import WorldSetup from './world-setup.svelte';
 	import SceneSetup from './scene-setup.svelte';
 
-	import { state3D } from '$lib/product-viewer/state3D.js';
-	import { sheep } from '$lib/stores/sheep.js';
+	import { state3D } from '$lib/product-viewer/state3D';
+	import { sheep } from '$lib/stores/sheep.ts';
 	import svgFilePath from '$lib/assets/img/sheep.svg';
 
 	onMount(() => {

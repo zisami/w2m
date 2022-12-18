@@ -1,7 +1,53 @@
 import { writable } from 'svelte/store';
 import { degToRad } from 'three/src/math/MathUtils';
 
-export const state3D = writable({
+export interface ThreeState {
+	model: {
+		position: number[];
+		rotation: number[];
+		scale: number;
+		baseScale: number;
+		depth: number;
+	};
+	camera: {
+		position: number[];
+		fov: number;
+	};
+	dirLights: [
+		{
+			position: number[];
+			castShadow: true;
+		}
+	];
+	ambLight: {
+		intensity: number;
+	};
+	OrbitControls: {
+		minPolarAngle: number;
+		maxPolarAngle: number;
+		minAzimuthAngle: number;
+		maxAzimuthAngle: number;
+		enableZoom: true;
+		maxDistance: 150;
+	};
+	world: {
+		floor: {
+			args: number[];
+			rotation: {
+				x: number;
+			};
+			color: String;
+		};
+		sky: {
+			args: number[];
+			rotation: {
+				z: number;
+			};
+			color: string;
+		};
+	};
+}
+const initialState: ThreeState = {
 	model: {
 		position: [-0.75, 2, 0],
 		rotation: [0, degToRad(-150), 0],
@@ -46,4 +92,6 @@ export const state3D = writable({
 			color: '#87ceeb'
 		}
 	}
-});
+};
+
+export const state3D = writable<ThreeState>(initialState);
