@@ -1,10 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import paper from 'paper';
-	import { sheep } from '$lib/stores/sheep.ts';
+	import { sheep } from '$lib/stores/sheep';
 	import { getLayerByName } from '../helpers';
-	import PaperEditor from '../paper-editor.svelte';
-	import PaperTools from '../paper-tools.svelte';
 
 	onMount(() => {
 		const tool = new paper.Tool();
@@ -31,6 +29,8 @@
 		};
 
 		tool.onMouseUp = function (event: paper.ToolEvent) {
+			console.log(event);
+			
 			//mouse must be moved from the start point to close the path
 			if (event.point.x !== event.downPoint.x && event.point.y !== event.downPoint.y) {
 				path.arcTo(event.point, flipArc);

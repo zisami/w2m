@@ -17,7 +17,6 @@
             
 			let hitResult = paper.project.hitTest(event.point);
 			if (hitResult?.item ) {
-                console.log(hitResult.item.name);
                 const familyTree = [hitResult.item.name]
                 let parent = hitResult.item.parent 
                 if(parent){
@@ -50,16 +49,14 @@
 		tool.activate();
 	});
 	const onActivate = () => {
-		console.log('activate ', paper.tools);
 
 		const tool = paper.tools.find((tool) => {
 			if ('name' in tool) {
-                console.log('tool.name', tool.name, toolName);
+                //console.log('tool.name', tool.name, toolName);
 				return tool.name === toolName;
 			}
             return false
 		});
-        console.log(tool);
         
 		tool?.activate();
 	};

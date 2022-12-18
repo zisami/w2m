@@ -18,8 +18,6 @@
 		loader.load(svgFilePath, (svg) => {
 			$sheep.colors = svg.paths.map(path => path.color);
 			shapesFromPaths = svg.paths.map((path) => SVGLoader.createShapes(path));
-			console.log(shapesFromPaths);
-			console.log('$sheep.colors',$sheep.colors);
 		});
 	});
 	const loader = useLoader(SVGLoader, () => new SVGLoader());
@@ -35,7 +33,7 @@
 			const svg = $sheep.svg.outerHTML;
 			shapesFromPaths = [loader.parse(svg)?.paths?.map((path) => path?.toShapes())];
 			if($sheep?.scaleingFactor){
-				console.log('scale to fit', $sheep.scaleingFactor);
+				//console.log('scale to fit', $sheep.scaleingFactor);
 				$state3D.model.scale = $state3D.model.baseScale * $sheep.scaleingFactor;
 			}
 		}
@@ -48,7 +46,6 @@
 
 		<Float speed={1}>
 			<!-- sheep -->
-			{console.log($state3D)}
 			<T.Group scale={$state3D.model.scale} position={[-1, 2, 0]} rotation={[0, degToRad(-150), 0]}>
 				<ShapesLooper shapes={shapesFromPaths} />
 			</T.Group>

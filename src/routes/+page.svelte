@@ -23,5 +23,3 @@
 	<EditorTypeButtons />
 </EditorPane>
 
-<style>
-</style>
