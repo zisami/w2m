@@ -30,7 +30,7 @@
 
 		tool.onMouseUp = function (event: paper.ToolEvent) {
 			console.log(event);
-			
+
 			//mouse must be moved from the start point to close the path
 			if (event.point.x !== event.downPoint.x && event.point.y !== event.downPoint.y) {
 				path.arcTo(event.point, flipArc);
@@ -42,7 +42,7 @@
 				bounds.intersect(path);
 				const outline = paper.project.activeLayer.lastChild;
 				outline.fillColor = new paper.Color('grey');
-				console.log('aL:',paper.project.activeLayer.name);
+				console.log('aL:', paper.project.activeLayer.name);
 				paper.project.activeLayer.children = [outline];
 				const canvasSize = getCanvasSize(event.event.originalTarget);
 				const targetWidth = 200;
@@ -65,7 +65,7 @@
 	function getCanvasSize(canvas: HTMLCanvasElement) {
 		return { width: canvas.width, height: canvas.height };
 	}
-	function getDrawingDirection(pointA: paper.Point , pointB: paper.Point) {
+	function getDrawingDirection(pointA: paper.Point, pointB: paper.Point) {
 		return {
 			left: pointA.x - pointB.x >= 0,
 			right: pointA.x - pointB.x < 0,

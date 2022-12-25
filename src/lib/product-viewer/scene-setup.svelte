@@ -1,6 +1,7 @@
 <script>
 	import { OrbitControls, T } from '@threlte/core';
 	import { state3D } from '$lib/product-viewer/state3D';
+
 </script>
 
 <T.PerspectiveCamera makeDefault position={$state3D.camera.position} fov={$state3D.camera.fov}>

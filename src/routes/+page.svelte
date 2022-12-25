@@ -3,11 +3,10 @@
 	import EditorPane from '$lib/editor/editor-pane.svelte';
 	import Logo from '$lib/ui/logo/logo.svelte';
 	import EditorTypeButtons from '$lib/editor/editor-type-buttons.svelte';
-	import type { SvelteComponent, SvelteComponentTyped } from 'svelte/internal';
-	let world3d: ConstructorOfATypedSvelteComponent, paperEditor: ConstructorOfATypedSvelteComponent;
+	let world3d, paperEditor;
 	onMount(async () => {
-		world3d =(await import('$lib/product-viewer/product-viewer.svelte')).default
-		paperEditor =(await import('$lib/editor/paper/paper-editor.svelte')).default
+		world3d = (await import('$lib/product-viewer/product-viewer.svelte')).default;
+		paperEditor = (await import('$lib/editor/paper/paper-editor.svelte')).default;
 	});
 </script>
 
@@ -22,4 +21,3 @@
 
 	<EditorTypeButtons />
 </EditorPane>
-

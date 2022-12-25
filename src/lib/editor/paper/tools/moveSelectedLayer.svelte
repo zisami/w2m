@@ -1,36 +1,34 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import paper from 'paper';
-    import { getLayerByName } from '../helpers';
 
 	interface moveLayer extends paper.Tool {
 		name: string;
 	}
 
-	const toolName: string = 'moveLayer';
+	const toolName = 'moveLayer';
 	let clickedLayer: paper.Layer | null = null;
 	onMount(() => {
 		const tool: moveLayer = new paper.Tool();
 		tool.name = toolName;
 		tool.onMouseDown = function (event: paper.ToolEvent) {
 			// Test for a hit on any layer
-            
+
 			let hitResult = paper.project.hitTest(event.point);
-			if (hitResult?.item ) {
-                const familyTree = [hitResult.item.name]
-                let parent = hitResult.item.parent 
-                if(parent){
-                    familyTree.push(parent.name)
-                }
-                while (!(parent instanceof paper.Layer)) {
-                    parent = parent.parent
-                    familyTree.push(parent.name)
-                }
-                // Get the clicked layer
+			if (hitResult?.item) {
+				const familyTree = [hitResult.item.name];
+				let parent = hitResult.item.parent;
+				if (parent) {
+					familyTree.push(parent.name);
+				}
+				while (!(parent instanceof paper.Layer)) {
+					parent = parent.parent;
+					familyTree.push(parent.name);
+				}
+				// Get the clicked layer
 				clickedLayer = parent;
 				clickedLayer.selected = true;
-                console.log(familyTree);
-
+				console.log(familyTree);
 			}
 		};
 
@@ -42,22 +40,21 @@
 				}
 			}
 		};
-		tool.onMouseUp = function (event: paper.ToolEvent) {
+		tool.onMouseUp = function () {
 			if (clickedLayer) clickedLayer.selected = false;
 		};
 
 		tool.activate();
 	});
 	const onActivate = () => {
-
 		const tool = paper.tools.find((tool) => {
 			if ('name' in tool) {
-                //console.log('tool.name', tool.name, toolName);
+				//console.log('tool.name', tool.name, toolName);
 				return tool.name === toolName;
 			}
-            return false
+			return false;
 		});
-        
+
 		tool?.activate();
 	};
 </script>

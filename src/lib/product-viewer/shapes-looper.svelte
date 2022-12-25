@@ -1,13 +1,13 @@
-<script>
+<script lang="ts">
 	import MeshInteractive from './mesh-interactive.svelte';
-	export let index = 0;
-	export let shapes;
+	import type { Shape } from 'three';
+	export let shapes: Shape | Shape[];
 </script>
 
 {#if Array.isArray(shapes)}
-	{#each shapes as shape, index}
-		<svelte:self shapes={shape} index={index}/>
+	{#each shapes as shape}
+		<svelte:self shapes={shape} />
 	{/each}
 {:else}
-	<MeshInteractive shape={shapes} index={index}/>
+	<MeshInteractive shape={shapes}/>
 {/if}

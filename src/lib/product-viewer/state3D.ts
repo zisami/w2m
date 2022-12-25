@@ -1,21 +1,22 @@
+import type { Position } from '@threlte/core';
 import { writable } from 'svelte/store';
 import { degToRad } from 'three/src/math/MathUtils';
 
 export interface ThreeState {
 	model: {
-		position: number[];
+		position: Position;
 		rotation: number[];
 		scale: number;
 		baseScale: number;
 		depth: number;
 	};
 	camera: {
-		position: number[];
+		position: number | [x: number, y: number, z: number] | undefined;
 		fov: number;
 	};
 	dirLights: [
 		{
-			position: number[];
+			position: number | [x: number, y: number, z: number] | undefined;
 			castShadow: true;
 		}
 	];
@@ -36,7 +37,7 @@ export interface ThreeState {
 			rotation: {
 				x: number;
 			};
-			color: String;
+			color: string;
 		};
 		sky: {
 			args: number[];
@@ -49,7 +50,7 @@ export interface ThreeState {
 }
 const initialState: ThreeState = {
 	model: {
-		position: [-0.75, 2, 0],
+		position: { x: -0.75, y: 2, z: 0 },
 		rotation: [0, degToRad(-150), 0],
 		scale: -0.01,
 		baseScale: -0.01,
