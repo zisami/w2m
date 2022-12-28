@@ -70,4 +70,4 @@
 	};
 </script>
 
-<div class="button rounded-full bg-orange-900 text-orange-200 px-3 py-1" on:click={onActivate} on:keydown={onActivate}>Skeleton</div>
+<button class="btn btn-primary" on:click={onActivate} on:keydown={onActivate}>Skeleton</button>

@@ -47,6 +47,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"daisyui": "^2.46.0",
 		"magic-string": "^0.27.0",
 		"paper": "^0.12.17",
 		"svelte-icons": "^2.1.0"
