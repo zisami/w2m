@@ -2,10 +2,11 @@
 	import paper from 'paper';
 	import PaperTools from './paper-tools.svelte';
 	import { setupSheep } from './setup';
+	import {sheep } from '$lib/stores/sheep'
 
 	function usePaper(canvas: HTMLCanvasElement) {
 		paper.setup(canvas);
-		setupSheep();
+		setupSheep($sheep.skeletonConfig);
 		paper.view.update();
 	}
 </script>

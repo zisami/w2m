@@ -1,12 +1,14 @@
 import paper from 'paper';
 import head from '$lib/sheep/head.svg';
 import skeleton from '$lib/sheep/skeletonDots.svg';
+import type { SkeletonConfig } from '$lib/stores/sheep';
 import { onFrame } from './editor';
 
-export async function setupSheep(): Promise<void> {
-	importSkelletonDots();
+export async function setupSheep(skeletonConfig: SkeletonConfig): Promise<void> {
+	//importSkelletonDots();
+	buildSkeleton(skeletonConfig);
 	addBody();
-	importHead();
+	//importHead();
 	onFrame();
 	console.log(paper.project.layers);
 }
@@ -34,4 +36,16 @@ function importSkelletonDots() {
 function addBody() {
 	const layer = new paper.Layer();
 	layer.name = 'body';
+}
+function buildSkeleton(skeletonConfig: SkeletonConfig) {
+	const layer = new paper.Layer();
+	layer.name = 'skeleton';
+	const hips_Vector = skeletonConfig.startPoint.add(new paper.Point(0, 0));
+	const shoulder_Vector = hips_Vector.add(
+		new paper.Point({
+			length: skeletonConfig.body.length.init,
+			angle: skeletonConfig.body.angle.init
+		})
+	);
+	console.log('skeleton Lyaer', layer);
 }
