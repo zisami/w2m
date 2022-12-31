@@ -32,6 +32,12 @@ function buildSkeleton(skeletonConfig: SkeletonConfig): Skeleton {
 			angle: skeletonConfig.body.angle.init
 		})
 	);
+	const head_Vector = shoulder_Vector.add(
+		new paper.Point({
+			length: skeletonConfig.neck.length.init,
+			angle: skeletonConfig.neck.angle.init
+		})
+	);
 	const skeleton: Skeleton = {
 		hips: {
 			rotatesAround: null,
@@ -44,6 +50,12 @@ function buildSkeleton(skeletonConfig: SkeletonConfig): Skeleton {
 			point: shoulder_Vector,
 			length: skeletonConfig.body.length,
 			angle: skeletonConfig.body.angle
+		},
+		head: {
+			rotatesAround: 'shoulders',
+			point: head_Vector,
+			length: skeletonConfig.neck.length,
+			angle: skeletonConfig.neck.angle
 		}
 	};
 	return skeleton;
@@ -56,10 +68,11 @@ function renderSkeleton(skeleton: Skeleton): void {
 	for (const key in skeleton) {
 		const joint: SkeletonJoint = skeleton[key];
 		console.log(`${key}: ${joint.rotatesAround} `);
-		//const dot = new paper.Path.Circle(joint.point, 20);
+		const dot = new paper.Path.Circle(joint.point, 10);
 		//const dot = new paper.Path.RegularPolygon(joint.point, 3, 20);
-		//dot.name = key;
-		//dot.rotation = joint.point.angle;
+		dot.name = key;
+		dot.rotation = joint.point.angle;
+		dot.fillColor = new paper.Color('green');
 
 		let rotationPoint = new paper.Point(0, 0);
 		if (joint.rotatesAround) {
@@ -67,5 +80,5 @@ function renderSkeleton(skeleton: Skeleton): void {
 		}
 		vectorHelper(rotationPoint, joint.point);
 	}
-	skeletonLayer.fillColor = new paper.Color(100, 0, 0);
+	//skeletonLayer.fillColor = new paper.Color(100, 0, 0);
 }

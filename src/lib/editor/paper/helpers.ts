@@ -47,7 +47,7 @@ export function vectorHelper(startPoint: paper.Point, endPoint: paper.Point) {
 				vector = vector.project(vectorPrevious);
 			}
 		}
-		drawVector(true);
+		drawVector(false);
 	}
 
 	function drawVector(drag: boolean) {

@@ -12,6 +12,7 @@ export interface SheepState {
 export interface SkeletonConfig {
 	startPoint: paper.Point;
 	body: Bodypart;
+	neck: Bodypart;
 }
 export type Bodypart = {
 	length: SkeletonParams;
@@ -48,6 +49,18 @@ const initialState: SheepState = {
 			angle: {
 				init: 0,
 				min: 0,
+				max: -180
+			}
+		},
+		neck: {
+			length: {
+				init: 100,
+				min: 0,
+				max: 150
+			},
+			angle: {
+				init: -45,
+				min: 180,
 				max: -180
 			}
 		}
