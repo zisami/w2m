@@ -1,23 +1,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import paper from 'paper';
-
+	import { sheep, type SkeletonJoint } from '$lib/stores/sheep';
+	import { vectorHelper } from '../helpers';
 	interface moveLayer extends paper.Tool {
 		name: string;
 	}
 
+
 	const toolName = 'moveSkeleton';
 	let clickedLayer: paper.Layer | null = null;
-    let clickedItem: paper.Item | null = null;
-    const skeletonConfig = {
-        lowerLegs:{
-            length: {
-                min: 15,
-                max: 30,
-                original: 100,
-            }
-        }
-    }
+	let clickedItem: paper.Item | null = null;
+	let rotatesAround: string | null = null;
 
 	onMount(() => {
 		const tool: moveLayer = new paper.Tool();
@@ -25,30 +19,27 @@
 		tool.onMouseDown = function (event: paper.ToolEvent) {
 			// Test for a hit on any layer
 			let hitResult = paper.project.hitTest(event.point);
-			if (hitResult?.item) {
-				const familyTree = [hitResult.item.name];
-				let parent = hitResult.item.parent;
-				if (parent) {
-					familyTree.push(parent.name);
-				}
-				while (!(parent instanceof paper.Layer)) {
-					parent = parent.parent;
-					familyTree.push(parent.name);
-				}
-				// Get the clicked layer
-				clickedLayer = parent;
-                clickedItem = hitResult.item;
-				clickedItem.selected = true;
-				console.log(familyTree);
+			if (hitResult?.item?.name) {
+				clickedItem = hitResult.item;
+				console.log(clickedItem.name);
+				rotatesAround = $sheep?.skeleton?.[clickedItem.name]?.rotatesAround || null;
 			}
 		};
 
 		tool.onMouseDrag = function (event: paper.ToolEvent) {
-			// Move all the items on the clicked layer to the clicked point
-			if (clickedItem) {
-                console.log(event.point.getDistance(clickedItem.parent.position));
-                
-					clickedItem.position = event.point;
+			if (clickedItem && rotatesAround) {
+				//console.log('event.point', event.point);
+
+				const joint = $sheep?.skeleton?.[rotatesAround];
+				if (joint) {
+					const distance = joint.point.getDistance(event.point); 
+					const angle = joint.point.getDirectedAngle(event.point);
+					console.log(distance, angle, joint.point.angle);
+					
+					if (isValidDistance(distance, joint) && isValidAngle(angle, joint)) {
+						clickedItem.position = event.point;
+					}
+				}
 			}
 		};
 		tool.onMouseUp = function () {
@@ -60,14 +51,23 @@
 	const onActivate = () => {
 		const tool = paper.tools.find((tool) => {
 			if ('name' in tool) {
-				//console.log('tool.name', tool.name, toolName);
+				console.log('tool.name', tool.name, toolName);
 				return tool.name === toolName;
 			}
 			return false;
 		});
-        paper.project.layers.find((layer) => layer.name === 'skeletonDots')?.bringToFront()
+		paper.project.layers.find((layer) => layer.name === 'skeletonDots')?.bringToFront();
 		tool?.activate();
 	};
+	/**Check if the distance is within the bounds of the skeleton and if so return true.*/
+	function isValidDistance(distance: number, joint: SkeletonJoint): boolean {
+		return distance >= joint.length.min && distance <= joint.length.max;
+	}
+
+	/**Check if angle is within the bounds of the skeleton */
+	function isValidAngle(angle: number, joint: SkeletonJoint): boolean {
+		return angle >= joint.angle.min && angle <= joint.angle.max;
+	}
 </script>
 
 <button class="btn btn-primary" on:click={onActivate} on:keydown={onActivate}>Skeleton</button>

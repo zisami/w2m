@@ -28,7 +28,7 @@
 	if (typeof window !== 'undefined') {
 		serializer = new XMLSerializer();
 	}
-	let shapesFromPaths: SVGResult[]  | Shape[] | Shape[][];
+	let shapesFromPaths: SVGResult[] | Shape[] | Shape[][];
 	$: $sheep, svgToShapes();
 
 	function svgToShapes() {

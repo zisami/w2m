@@ -1,16 +1,17 @@
 import paper from 'paper';
 import head from '$lib/sheep/head.svg';
-import skeleton from '$lib/sheep/skeletonDots.svg';
-import type { SkeletonConfig } from '$lib/stores/sheep';
+import type { SkeletonConfig, Skeleton, SkeletonJoint } from '$lib/stores/sheep';
 import { onFrame } from './editor';
+import { vectorHelper } from './helpers';
 
-export async function setupSheep(skeletonConfig: SkeletonConfig): Promise<void> {
+export function setupSheep(skeletonConfig: SkeletonConfig): Skeleton {
 	//importSkelletonDots();
-	buildSkeleton(skeletonConfig);
+	const skeleton = buildSkeleton(skeletonConfig);
+	renderSkeleton(skeleton);
 	addBody();
 	//importHead();
 	onFrame();
-	console.log(paper.project.layers);
+	return skeleton;
 }
 
 function importHead() {
@@ -19,27 +20,11 @@ function importHead() {
 	layer.importSVG(head);
 }
 
-function importSkelletonDots() {
-	const layer = new paper.Layer();
-	layer.name = 'skeletonDots';
-	layer.importSVG(skeleton, (item: paper.Item) => {
-		console.log(item);
-		console.log(item.children.find((c) => c.name === 'skeletonDotsLayer'));
-
-		const skeletonDotsLayer = item.children.find((c) => c.name === 'skeletonDotsLayer');
-		if (skeletonDotsLayer) {
-			layer.children = [skeletonDotsLayer];
-		}
-	});
-}
-
 function addBody() {
 	const layer = new paper.Layer();
 	layer.name = 'body';
 }
-function buildSkeleton(skeletonConfig: SkeletonConfig) {
-	const layer = new paper.Layer();
-	layer.name = 'skeleton';
+function buildSkeleton(skeletonConfig: SkeletonConfig): Skeleton {
 	const hips_Vector = skeletonConfig.startPoint.add(new paper.Point(0, 0));
 	const shoulder_Vector = hips_Vector.add(
 		new paper.Point({
@@ -47,5 +32,40 @@ function buildSkeleton(skeletonConfig: SkeletonConfig) {
 			angle: skeletonConfig.body.angle.init
 		})
 	);
-	console.log('skeleton Lyaer', layer);
+	const skeleton: Skeleton = {
+		hips: {
+			rotatesAround: null,
+			point: hips_Vector,
+			length: skeletonConfig.body.length,
+			angle: skeletonConfig.body.angle
+		},
+		shoulders: {
+			rotatesAround: 'hips',
+			point: shoulder_Vector,
+			length: skeletonConfig.body.length,
+			angle: skeletonConfig.body.angle
+		}
+	};
+	return skeleton;
+}
+function renderSkeleton(skeleton: Skeleton): void {
+	console.log(skeleton);
+
+	const skeletonLayer = new paper.Layer();
+	skeletonLayer.name = 'skeleton';
+	for (const key in skeleton) {
+		const joint: SkeletonJoint = skeleton[key];
+		console.log(`${key}: ${joint.rotatesAround} `);
+		//const dot = new paper.Path.Circle(joint.point, 20);
+		//const dot = new paper.Path.RegularPolygon(joint.point, 3, 20);
+		//dot.name = key;
+		//dot.rotation = joint.point.angle;
+
+		let rotationPoint = new paper.Point(0, 0);
+		if (joint.rotatesAround) {
+			rotationPoint = skeleton[joint.rotatesAround].point;
+		}
+		vectorHelper(rotationPoint, joint.point);
+	}
+	skeletonLayer.fillColor = new paper.Color(100, 0, 0);
 }

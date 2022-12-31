@@ -4,6 +4,10 @@
 	import { sheep } from '$lib/stores/sheep';
 	import { getLayerByName } from '../helpers';
 
+	interface ToolEventExtended extends paper.ToolEvent {
+		event: MouseEvent;
+	}
+
 	onMount(() => {
 		const tool = new paper.Tool();
 		tool.name = 'wool';
@@ -12,7 +16,7 @@
 		let flipArc = false;
 		tool.minDistance = 5;
 		tool.maxDistance = 40;
-		tool.onMouseDown = (event: paper.ToolEvent) => {
+		tool.onMouseDown = (event: ToolEventExtended) => {
 			//console.clear();
 			//paper.project.activeLayer.children = [];
 			path = new paper.Path();
@@ -20,7 +24,7 @@
 			path.add(event.point);
 		};
 
-		tool.onMouseDrag = function (event: paper.ToolEvent) {
+		tool.onMouseDrag = function (event: ToolEventExtended) {
 			//only on the frist point
 			if (!path?.segments[1]) {
 				flipArc = getArcFlip(event);
@@ -28,7 +32,7 @@
 			path.arcTo(event.point, flipArc);
 		};
 
-		tool.onMouseUp = function (event: paper.ToolEvent) {
+		tool.onMouseUp = function (event: ToolEventExtended) {
 			console.log(event);
 
 			//mouse must be moved from the start point to close the path

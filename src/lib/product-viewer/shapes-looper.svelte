@@ -9,5 +9,5 @@
 		<svelte:self shapes={shape} />
 	{/each}
 {:else}
-	<MeshInteractive shape={shapes}/>
+	<MeshInteractive shape={shapes} />
 {/if}

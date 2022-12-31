@@ -6,6 +6,7 @@ export interface SheepState {
 	svg: SVGElement | null;
 	colors?: THREE.Color[] | null;
 	skeletonConfig: SkeletonConfig;
+	skeleton?: Skeleton;
 }
 
 export interface SkeletonConfig {
@@ -21,6 +22,18 @@ export type SkeletonParams = {
 	min: number;
 	max: number;
 };
+export type SkeletonJoint = {
+	rotatesAround: string | null;
+	point: paper.Point;
+	length: SkeletonParams;
+	angle: SkeletonParams;
+};
+export type Skeleton = {
+	[key: string]: SkeletonJoint;
+	hips: SkeletonJoint;
+	shoulders: SkeletonJoint;
+	//head: SkeletonJoint;
+};
 const initialState: SheepState = {
 	scaleingFactor: null,
 	svg: null,
@@ -29,7 +42,7 @@ const initialState: SheepState = {
 		body: {
 			length: {
 				init: 100,
-				min: 50,
+				min: 0,
 				max: 150
 			},
 			angle: {
