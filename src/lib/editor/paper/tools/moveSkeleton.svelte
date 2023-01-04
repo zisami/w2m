@@ -2,11 +2,12 @@
 	import { onMount } from 'svelte';
 	import paper from 'paper';
 	import { sheep, type SkeletonJoint } from '$lib/stores/sheep';
-	import { vectorHelper } from '../helpers';
+	import { paperState } from '$lib/editor/paper/paper.store';
+	import { vectorHelper, vectorChecker, getLayerByName } from '../helpers';
+	import { updateSheep } from '../setup';
 	interface moveLayer extends paper.Tool {
 		name: string;
 	}
-
 
 	const toolName = 'moveSkeleton';
 	let clickedLayer: paper.Layer | null = null;
@@ -21,29 +22,38 @@
 			let hitResult = paper.project.hitTest(event.point);
 			if (hitResult?.item?.name) {
 				clickedItem = hitResult.item;
-				console.log(clickedItem.name);
 				rotatesAround = $sheep?.skeleton?.[clickedItem.name]?.rotatesAround || null;
 			}
 		};
 
 		tool.onMouseDrag = function (event: paper.ToolEvent) {
 			if (clickedItem && rotatesAround) {
-				//console.log('event.point', event.point);
-
 				const joint = $sheep?.skeleton?.[rotatesAround];
 				if (joint) {
-					const distance = joint.point.getDistance(event.point); 
-					const angle = joint.point.getDirectedAngle(event.point);
-					console.log(distance, angle, joint.point.angle);
-					
-					if (isValidDistance(distance, joint) && isValidAngle(angle, joint)) {
-						clickedItem.position = event.point;
+					const distance = joint.point.getDistance(event.point);
+					const angle = event.point.subtract(joint.point)?.angle;
+
+					if (isValidDistance(distance, joint) && isValidAngle(angle, joint) && $sheep?.skeleton?.[clickedItem.name]) {
+						$sheep.skeleton[clickedItem.name].point = event.point;
+						updateSheep($sheep.skeleton, $paperState)
+					}
+					$paperState.eventVektor.distance = distance;
+					$paperState.eventVektor.angle = angle;
+					$paperState.eventVektor.isValidAngle = isValidAngle(angle, joint);
+					$paperState.eventVektor.isValidDistance = isValidDistance(distance, joint);
+					if ($paperState.renderEventVector) {
+						vectorChecker(
+							joint.point,
+							event.point,
+							isValidDistance(distance, joint),
+							isValidAngle(angle, joint)
+						);
 					}
 				}
 			}
 		};
 		tool.onMouseUp = function () {
-			if (clickedLayer) clickedLayer.selected = false;
+			getLayerByName('eventVectors')?.remove();
 		};
 
 		tool.activate();
@@ -51,7 +61,6 @@
 	const onActivate = () => {
 		const tool = paper.tools.find((tool) => {
 			if ('name' in tool) {
-				console.log('tool.name', tool.name, toolName);
 				return tool.name === toolName;
 			}
 			return false;
@@ -66,7 +75,10 @@
 
 	/**Check if angle is within the bounds of the skeleton */
 	function isValidAngle(angle: number, joint: SkeletonJoint): boolean {
-		return angle >= joint.angle.min && angle <= joint.angle.max;
+		if (angle >= 0) {
+			return angle >= joint.angle.min && angle <= joint.angle.max;
+		}
+		return angle <= joint.angle.min && angle >= joint.angle.max;
 	}
 </script>
 

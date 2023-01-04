@@ -2,16 +2,21 @@ import paper from 'paper';
 import head from '$lib/sheep/head.svg';
 import type { SkeletonConfig, Skeleton, SkeletonJoint } from '$lib/stores/sheep';
 import { onFrame } from './editor';
-import { vectorHelper } from './helpers';
+import { vectorHelper, getLayerByName } from './helpers';
 
-export function setupSheep(skeletonConfig: SkeletonConfig): Skeleton {
+export function setupSheep(skeletonConfig: SkeletonConfig, paperState): Skeleton {
 	//importSkelletonDots();
 	const skeleton = buildSkeleton(skeletonConfig);
 	renderSkeleton(skeleton);
+	renderSkeletonVectors(skeleton, paperState);
 	addBody();
 	//importHead();
 	onFrame();
 	return skeleton;
+}
+export function updateSheep(skeleton: Skeleton, paperState) {
+	renderSkeleton(skeleton);
+	renderSkeletonVectors(skeleton, paperState);
 }
 
 function importHead() {
@@ -60,14 +65,12 @@ function buildSkeleton(skeletonConfig: SkeletonConfig): Skeleton {
 	};
 	return skeleton;
 }
-function renderSkeleton(skeleton: Skeleton): void {
-	console.log(skeleton);
-
+export function renderSkeleton(skeleton: Skeleton): void {
+	getLayerByName('skeleton')?.remove();
 	const skeletonLayer = new paper.Layer();
 	skeletonLayer.name = 'skeleton';
 	for (const key in skeleton) {
 		const joint: SkeletonJoint = skeleton[key];
-		console.log(`${key}: ${joint.rotatesAround} `);
 		const dot = new paper.Path.Circle(joint.point, 10);
 		//const dot = new paper.Path.RegularPolygon(joint.point, 3, 20);
 		dot.name = key;
@@ -78,7 +81,22 @@ function renderSkeleton(skeleton: Skeleton): void {
 		if (joint.rotatesAround) {
 			rotationPoint = skeleton[joint.rotatesAround].point;
 		}
-		vectorHelper(rotationPoint, joint.point);
 	}
-	//skeletonLayer.fillColor = new paper.Color(100, 0, 0);
+}
+
+export function renderSkeletonVectors(skeleton: Skeleton, paperState): void {
+	getLayerByName('skeletonVectors')?.remove();
+
+	if (paperState?.renderSkeletonVectors) {
+		const skeletonLayer = new paper.Layer();
+		skeletonLayer.name = 'skeletonVectors';
+		for (const key in skeleton) {
+			const joint: SkeletonJoint = skeleton[key];
+			let rotationPoint = new paper.Point(0, 0);
+			if (joint.rotatesAround) {
+				rotationPoint = skeleton[joint.rotatesAround].point;
+			}
+			vectorHelper(rotationPoint, joint.point);
+		}
+	}
 }

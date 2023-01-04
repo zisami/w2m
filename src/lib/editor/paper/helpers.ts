@@ -17,7 +17,12 @@ type vectorHelperValues = {
 	angle?: number;
 };
 
-export function vectorHelper(startPoint: paper.Point, endPoint: paper.Point) {
+export function vectorHelper(
+	startPoint: paper.Point,
+	endPoint: paper.Point,
+	isValidDistance = false,
+	isValidAngle = false
+) {
 	const values: vectorHelperValues = {
 		fixLength: false,
 		fixAngle: false,
@@ -33,10 +38,15 @@ export function vectorHelper(startPoint: paper.Point, endPoint: paper.Point) {
 		dashedItems: paper.Item[],
 		vector: paper.Point;
 
-	processVector(vectorStart, true);
+	processVector(vectorStart, true, isValidDistance, isValidAngle);
 	//console.log(startPoint, endPoint);
 
-	function processVector(point: paper.Point, drag: boolean) {
+	function processVector(
+		point: paper.Point,
+		drag: boolean,
+		isValidDistance = false,
+		isValidAngle = false
+	) {
 		vector = endPoint.subtract(startPoint);
 		if (vectorPrevious) {
 			if (values.fixLength && values.fixAngle) {
@@ -47,10 +57,12 @@ export function vectorHelper(startPoint: paper.Point, endPoint: paper.Point) {
 				vector = vector.project(vectorPrevious);
 			}
 		}
-		drawVector(false);
+		drawVector(false, isValidDistance, isValidAngle);
 	}
 
-	function drawVector(drag: boolean) {
+	function drawVector(drag: boolean, isValidDistance = false, isValidAngle = false) {
+		const validColor = '#22FF11';
+		const notValidColor = '#FF2222';
 		if (items) {
 			for (let i = 0, l = items.length; i < l; i++) {
 				items[i].remove();
@@ -65,7 +77,10 @@ export function vectorHelper(startPoint: paper.Point, endPoint: paper.Point) {
 			new paper.Path([end.add(arrowVector.rotate(135)), end, end.add(arrowVector.rotate(-135))])
 		]);
 		vectorItem.strokeWidth = 0.75;
-		vectorItem.strokeColor = new paper.Color('#e4141b');
+		vectorItem.children[0].strokeColor = new paper.Color(
+			isValidDistance ? validColor : notValidColor
+		);
+		vectorItem.children[1].strokeColor = new paper.Color(isValidAngle ? validColor : notValidColor);
 		// Display:
 		dashedItems = [];
 		// Draw Circle
@@ -186,40 +201,19 @@ export function vectorHelper(startPoint: paper.Point, endPoint: paper.Point) {
 			items.push(text);
 		}
 	}
+}
 
-	/*
-
-	function onMouseDown(event) {
-		const end = vectorStart.add(vector);
-		let create = false;
-		if (event.modifiers.shift && vectorItem) {
-			vectorStart = end;
-			create = true;
-		} else if (vector && (event.modifiers.option || (end && end.getDistance(event.point) < 10))) {
-			create = false;
-		} else {
-			vectorStart = event.point;
-		}
-		if (create) {
-			dashItem = vectorItem;
-			vectorItem = null;
-		}
-		processVector(event, true);
-		//	document.redraw();
+export function vectorChecker(
+	startPoint: paper.Point,
+	endPoint: paper.Point,
+	isValidDistance = false,
+	isValidAngle = false,
+	render = true
+) {
+	getLayerByName('eventVectors')?.remove();
+	if (render) {
+		const skeletonLayer = new paper.Layer();
+		skeletonLayer.name = 'eventVectors';
+		vectorHelper(startPoint, endPoint, isValidDistance, isValidAngle);
 	}
-
-	function onMouseDrag(event) {
-		if (!event.modifiers.shift && values.fixLength && values.fixAngle) vectorStart = event.point;
-		processVector(event, event.modifiers.shift);
-	}
-
-	function onMouseUp(event) {
-		processVector(event, false);
-		if (dashItem) {
-			dashItem.dashArray = [1, 2];
-			dashItem = null;
-		}
-		vectorPrevious = vector;
-	}
-	*/
 }
