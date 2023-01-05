@@ -92,6 +92,7 @@
 		}
 		return angle <= joint.angle.min && angle >= joint.angle.max;
 	}
+	
 </script>
 
 <button class="btn btn-primary" on:click={onActivate} on:keydown={onActivate}>Skeleton</button>
