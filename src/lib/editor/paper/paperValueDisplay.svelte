@@ -3,6 +3,14 @@
 </script>
 
 <div class="grid grid-cols-6 gap-1 absolute bg-slate-900 p-8 z-50">
+
+
+	<div class="col-span-5">clicked Joint:</div>
+	<div class="text-right">{$paperState?.eventVektor?.itemName || '-'}</div>
+
+	<div class="col-span-5">rotates Around:</div>
+	<div class="text-right">{$paperState?.eventVektor?.jointName || '-'}</div>
+
 	<div class="col-span-5">Distance:</div>
 	<div class="text-right">{$paperState?.eventVektor?.distance?.toFixed(2) || '-'}</div>
 

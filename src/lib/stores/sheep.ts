@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store';
 import paper from 'paper';
+import type PaperEditor from '$lib/editor/paper/paper-editor.svelte';
 
 export interface SheepState {
 	scaleingFactor: number | null;
@@ -13,6 +14,8 @@ export interface SkeletonConfig {
 	startPoint: paper.Point;
 	body: Bodypart;
 	neck: Bodypart;
+	thigh: Bodypart;
+	lowerLeg: Bodypart;
 }
 export type Bodypart = {
 	length: SkeletonParams;
@@ -20,6 +23,7 @@ export type Bodypart = {
 };
 export type SkeletonParams = {
 	init: number;
+	last?: number;
 	min: number;
 	max: number;
 };
@@ -33,8 +37,9 @@ export type Skeleton = {
 	[key: string]: SkeletonJoint;
 	hips: SkeletonJoint;
 	shoulders: SkeletonJoint;
-	//head: SkeletonJoint;
+	head: SkeletonJoint;
 };
+
 const initialState: SheepState = {
 	scaleingFactor: null,
 	svg: null,
@@ -62,6 +67,30 @@ const initialState: SheepState = {
 				init: -45,
 				min: 180,
 				max: -180
+			}
+		},
+		thigh: {
+			length: {
+				init: 30,
+				min: 20,
+				max: 75
+			},
+			angle: {
+				init: 45,
+				min: 0,
+				max: -135
+			}
+		},
+		lowerLeg: {
+			length: {
+				init: 25,
+				min: 15,
+				max: 50
+			},
+			angle: {
+				init: 45,
+				min: 45,
+				max: 180
 			}
 		}
 	}

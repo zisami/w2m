@@ -23,6 +23,8 @@
 			if (hitResult?.item?.name) {
 				clickedItem = hitResult.item;
 				rotatesAround = $sheep?.skeleton?.[clickedItem.name]?.rotatesAround || null;
+				$paperState.eventVektor.itemName = clickedItem.name;
+				$paperState.eventVektor.jointName = rotatesAround;
 			}
 		};
 
@@ -33,10 +35,19 @@
 					const distance = joint.point.getDistance(event.point);
 					const angle = event.point.subtract(joint.point)?.angle;
 
-					if (isValidDistance(distance, joint) && isValidAngle(angle, joint) && $sheep?.skeleton?.[clickedItem.name]) {
-						$sheep.skeleton[clickedItem.name].point = event.point;
-						updateSheep($sheep.skeleton, $paperState)
+					if (
+						isValidDistance(distance, joint) &&
+						isValidAngle(angle, joint) &&
+						$sheep?.skeleton?.[clickedItem.name]
+					) {
+						console.log('Distance', distance.toFixed(0), 'lenght', $sheep.skeleton[clickedItem.name].point.length.toFixed(0) );
+						console.log('Angle', angle.toFixed(0), 'angle', $sheep.skeleton[clickedItem.name].point.angle.toFixed(0) );
+						
+						$sheep.pointNew = {}
+						$sheep.pointNew[clickedItem.name] = joint.point.add({length:distance, angle})
+						$sheep.skeleton = updateSheep($sheep.skeleton, $sheep.pointNew, $paperState);
 					}
+
 					$paperState.eventVektor.distance = distance;
 					$paperState.eventVektor.angle = angle;
 					$paperState.eventVektor.isValidAngle = isValidAngle(angle, joint);
@@ -54,6 +65,7 @@
 		};
 		tool.onMouseUp = function () {
 			getLayerByName('eventVectors')?.remove();
+			console.log($sheep?.skeleton);
 		};
 
 		tool.activate();
