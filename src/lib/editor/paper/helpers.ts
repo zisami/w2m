@@ -155,6 +155,7 @@ export function vectorHelper(
 			);
 			text.content = Math.floor(vector.angle * 100) / 100 + '°';
 			text.fillColor = new paper.Color('black');
+			text.fontSize = 8;
 			items.push(text);
 		}
 	}
@@ -195,7 +196,8 @@ export function vectorHelper(
 				point: middle.add(awayVector.normalize(away + lengthSize)),
 				content: (prefix || '') + Math.floor(value * 1000) / 1000,
 				fillColor: 'black',
-				justification: 'center'
+				justification: 'center',
+				fontSize: 8
 			});
 			text.rotate(textAngle);
 			items.push(text);

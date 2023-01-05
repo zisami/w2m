@@ -3,21 +3,16 @@
 	import EditorPane from '$lib/editor/editor-pane.svelte';
 	import Logo from '$lib/ui/logo/logo.svelte';
 	import EditorTypeButtons from '$lib/editor/editor-type-buttons.svelte';
-	let world3d, paperEditor;
-	onMount(async () => {
-		world3d = (await import('$lib/product-viewer/product-viewer.svelte')).default;
-		paperEditor = (await import('$lib/editor/paper/paper-editor.svelte')).default;
-	});
+	import PaperEditor from '$lib/editor/paper/paper-editor.svelte';
+	import ProductViewer from '$lib/product-viewer/product-viewer.svelte';
+
 </script>
 
 <Logo />
-{#if world3d}
-	<svelte:component this={world3d} />
-{/if}
+<ProductViewer />
+
 <EditorPane>
-	{#if paperEditor}
-		<svelte:component this={paperEditor} />
-	{/if}
+	<PaperEditor />
 
 	<EditorTypeButtons />
 </EditorPane>
