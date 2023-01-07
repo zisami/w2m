@@ -26,7 +26,8 @@ export interface Skeleton {
 	length: SkeletonParams;
 	angle: SkeletonParams;
 	limbs: Limb[];
-	getLimbByName(name: string, limbsToSearch: Limb[]): Limb | null;
+	getLimbByName(name: string, limbsToSearch?: Limb[]): Limb | null;
+	getParentByLimbName(name: string, limbsToSearch?: Limb[]): Limb | null;
 }
 export class Skeleton implements Skeleton {
 	constructor(pose: Limb) {
@@ -35,26 +36,46 @@ export class Skeleton implements Skeleton {
 		this.length = pose.length;
 		this.angle = pose.angle;
 	}
-	getLimbByName(name: string, limbsToSearch: Limb[]): Limb | null {
-		let limbFound = null;
-		for (const limbName in limbsToSearch) {
-			const limb = limbsToSearch[limbName];
+	getLimbByName(name: string, limbsToSearch?: Limb[]): Limb | null {
+		if (!limbsToSearch) limbsToSearch = this.limbs;
+		console.log();
+		console.log('name', name);
 
-			if (limb.name === name) {
-				limbFound = limb;
-				break;
+		for (const nextLimb of limbsToSearch) {
+			console.log('limb', nextLimb.name, name);
+
+			if (nextLimb.name === name) {
+				return nextLimb;
 			}
-			if (limb?.limbs?.length) {
-				for (let index = 0; index < limb.limbs.length; index++) {
-					const nextLimb = limb.limbs[index];
-					const result = this.getLimbByName(name, nextLimb);
-					if (result) {
-						limbFound = result;
-					}
+			if (nextLimb?.limbs?.length) {
+				const result = this.getLimbByName(name, nextLimb.limbs);
+				if (result) {
+					return result;
 				}
 			}
 		}
-		return limbFound;
+		return null;
+	}
+	getLimbChainByName(name: string, limbsToSearch?: Limb[]): Limb[] | null {
+		if (!limbsToSearch) limbsToSearch = this.limbs;
+		console.log();
+		console.log('name', name);
+		const limbChain: Limb[] = [];
+		for (const nextLimb of limbsToSearch) {
+			console.log('limb', nextLimb.name, name);
+
+			if (nextLimb.name === name) {
+				return [nextLimb];
+			}
+			if (nextLimb?.limbs?.length) {
+				const result = this.getLimbChainByName(name, nextLimb.limbs);
+				if (result?.length) {
+					result.unshift(nextLimb);
+					return result;
+				}
+			}
+		}
+		return limbChain;
 	}
 }
 const pose: Limb = {
@@ -160,9 +181,9 @@ const pose: Limb = {
 										max: 15
 									},
 									angle: {
-										min: 0,
-										last: 45,
-										max: 135
+										min: 90,
+										last: 145,
+										max: 180
 									},
 									limbs: []
 								}
@@ -179,7 +200,7 @@ const pose: Limb = {
 					},
 					angle: {
 						min: -15,
-						last: 45,
+						last: 35,
 						max: 135
 					},
 					limbs: [

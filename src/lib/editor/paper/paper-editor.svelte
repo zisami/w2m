@@ -1,7 +1,7 @@
 <script lang="ts">
 	import paper from 'paper';
 	import PaperTools from './paper-tools.svelte';
-	import { setupSheep, updateSheep, renderSkeleton, renderSkeletonVectors } from './setup';
+	import { setupSheep, updateSheep, renderLimb, renderSkeletonVectors } from './setup';
 	import { sheep } from '$lib/stores/sheep';
 	import { paperState } from './paper.store';
 

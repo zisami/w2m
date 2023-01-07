@@ -1,27 +1,27 @@
 import paper from 'paper';
 import head from '$lib/sheep/head.svg';
-import type { Limb } from '$lib/stores/sheep';
+import type { Limb, Skeleton } from '$lib/stores/sheep';
 import { onFrame } from './editor';
 import { vectorHelper, getLayerByName } from './helpers';
 
-export function setupSheep(skeleton: Limb, paperState): Skeleton {
+export function setupSheep(skeleton: Skeleton, paperState): Skeleton {
 	//importSkelletonDots();
 	getLayerByName('skeleton')?.remove();
 	const skeletonLayer = new paper.Layer();
 	skeletonLayer.name = 'skeleton';
-	renderSkeleton(skeleton);
+	renderLimb(skeleton);
 	renderSkeletonVectors(skeleton, paperState);
 	addBody();
 	//importHead();
 	onFrame();
 	return skeleton;
 }
-export function updateSheep(skeleton: Limb, paperState): void {
+export function updateSheep(skeleton: Skeleton | Limb, paperState): void {
 	//importSkelletonDots();
 	getLayerByName('skeleton')?.remove();
 	const skeletonLayer = new paper.Layer();
 	skeletonLayer.name = 'skeleton';
-	renderSkeleton(skeleton);
+	renderLimb(skeleton);
 	renderSkeletonVectors(skeleton, paperState);
 }
 function importHead() {
@@ -35,8 +35,8 @@ function addBody() {
 	layer.name = 'body';
 }
 
-export function renderSkeleton(
-	limb: Limb,
+export function renderLimb(
+	limb: Skeleton | Limb,
 	rotationPoint: paper.Point = new paper.Point(0, 0)
 ): void {
 	//console.log('limb', limb);
@@ -56,7 +56,7 @@ export function renderSkeleton(
 
 		if (limb?.limbs?.length) {
 			limb.limbs.forEach((limb) => {
-				renderSkeleton(limb, jointPoint);
+				renderLimb(limb, jointPoint);
 			});
 		}
 	}
@@ -72,10 +72,10 @@ export function renderSkeletonVectors(skeleton: Limb, paperState): void {
 	}
 }
 export function renderLimbVectors(
-	limb: Limb,
+	limb: Skeleton | Limb,
 	rotationPoint: paper.Point = new paper.Point(0, 0)
 ): void {
-	console.log(limb.name);
+	//console.log(limb.name);
 
 	const jointPoint = rotationPoint.add(
 		new paper.Point({ length: limb.length.last, angle: limb.angle.last })
