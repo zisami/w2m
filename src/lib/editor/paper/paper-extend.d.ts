@@ -1,4 +1,4 @@
-import { Point } from 'paper';
+//import { Point } from 'paper';
 
 declare module 'paper' {
 	interface Point {

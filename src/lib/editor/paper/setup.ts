@@ -1,10 +1,11 @@
 import paper from 'paper';
 import head from '$lib/sheep/head.svg';
 import type { Limb, Skeleton } from '$lib/stores/sheep';
+import type { paperState } from '$lib/editor/paper/paper.store';
 import { onFrame } from './editor';
 import { vectorHelper, getLayerByName } from './helpers';
 
-export function setupSheep(skeleton: Skeleton, paperState): Skeleton {
+export function setupSheep(skeleton: Limb, paperState: paperState): Limb {
 	//importSkelletonDots();
 	getLayerByName('skeleton')?.remove();
 	const skeletonLayer = new paper.Layer();
@@ -12,11 +13,11 @@ export function setupSheep(skeleton: Skeleton, paperState): Skeleton {
 	renderLimb(skeleton);
 	renderSkeletonVectors(skeleton, paperState);
 	addBody();
-	//importHead();
+	importHead();
 	onFrame();
 	return skeleton;
 }
-export function updateSheep(skeleton: Skeleton | Limb, paperState): void {
+export function updateSheep(skeleton: Limb, paperState?: paperState): void {
 	//importSkelletonDots();
 	getLayerByName('skeleton')?.remove();
 	const skeletonLayer = new paper.Layer();
@@ -39,29 +40,28 @@ export function renderLimb(
 	limb: Skeleton | Limb,
 	rotationPoint: paper.Point = new paper.Point(0, 0)
 ): void {
-	//console.log('limb', limb);
-	//console.log('rotationPoint', rotationPoint);
-
 	const jointPoint = rotationPoint.add(
 		new paper.Point({ length: limb.length.last, angle: limb.angle.last })
 	);
-	//console.log('jointPoint', jointPoint.length, jointPoint.angle);
 	if (jointPoint) {
-		const jointMarker = new paper.Path.Circle(jointPoint, 5);
-		jointMarker.name = limb.name;
-		jointMarker.fillColor = new paper.Color('#AAA');
-		jointMarker.strokeColor = new paper.Color('#555');
-		jointMarker.strokeWidth = 2;
-		jointMarker.visible = true;
-
+		addJointMarker(jointPoint);
 		if (limb?.limbs?.length) {
 			limb.limbs.forEach((limb) => {
 				renderLimb(limb, jointPoint);
 			});
 		}
 	}
+
+	function addJointMarker(jointPoint: paper.Point): void {
+		const jointMarker = new paper.Path.Circle(jointPoint, 5);
+		jointMarker.name = limb.name;
+		jointMarker.fillColor = new paper.Color('#AAA');
+		jointMarker.strokeColor = new paper.Color('#555');
+		jointMarker.strokeWidth = 2;
+		jointMarker.visible = true;
+	}
 }
-export function renderSkeletonVectors(skeleton: Limb, paperState): void {
+export function renderSkeletonVectors(skeleton: Limb, paperState?: paperState): void {
 	//reset Layer
 	getLayerByName('skeletonVectors')?.remove();
 	const skeletonLayer = new paper.Layer();

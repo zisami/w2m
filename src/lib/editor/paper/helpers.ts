@@ -147,12 +147,7 @@ export function vectorHelper(
 		);
 		if (label) {
 			// Angle Label
-			const text = new paper.PointText(
-				center
-					.add(through)
-					.normalize(radius + 10)
-					.add(new paper.Point(0, 3))
-			);
+			const text = new paper.PointText(center.add(through).add(new paper.Point(0, 3)));
 			text.content = Math.floor(vector.angle * 100) / 100 + '°';
 			text.fillColor = new paper.Color('black');
 			text.fontSize = 8;

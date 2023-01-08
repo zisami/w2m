@@ -15,7 +15,7 @@
 	import svgFilePath from '$lib/assets/img/sheep.svg';
 
 	import type { SVGResult } from 'three/examples/jsm/loaders/SVGLoader.js';
-	//import type { Shape } from 'three';
+	import type { Shape } from 'three';
 
 	onMount(() => {
 		loader.load(svgFilePath, (svg) => {
