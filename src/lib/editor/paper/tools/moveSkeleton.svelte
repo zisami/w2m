@@ -1,21 +1,18 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import paper from 'paper';
-	import { sheep } from '$lib/stores/sheep';
-	import type { Limb } from '$lib/stores/sheep';
+	import { sheep, Skeleton } from '$lib/stores/sheep';
 	import { paperState } from '$lib/editor/paper/paper.store';
 	import { vectorChecker, getLayerByName } from '../helpers';
 	import { updateSheep } from '../setup';
 	interface moveLayer extends paper.Tool {
 		name: string;
 	}
-
+	paper.Tool;
 	const toolName = 'moveSkeleton';
-	//let clickedLayer: paper.Layer | null = null;
 	let clickedItem: paper.Item | null = null;
-	//let rotatesAround: string | null = null;
-	let limb: Limb | null = null;
-	let limbChain: Limb[] | null = null;
+	let limb: Skeleton | null = null;
+	let limbChain: Skeleton[] | null = null;
 
 	onMount(() => {
 		const tool: moveLayer = new paper.Tool();
@@ -28,22 +25,33 @@
 				$paperState.eventVector.itemName = clickedItem.name;
 				limb = $sheep.skeleton?.getLimbByName(clickedItem.name) || null;
 				limbChain = $sheep.skeleton?.getLimbChainByName(clickedItem.name) || null;
+				$paperState.eventVector.jointName = limbChain?.reverse()?.[1]?.name || '';
+				$paperState.eventVector.limbChain =
+					limbChain
+						?.map((limb) => limb.name)
+						?.reverse()
+						?.join(' -> ') || '';
 			}
 		};
 
 		tool.onMouseDrag = function (event: paper.ToolEvent) {
 			if (clickedItem && limb && limbChain) {
 				const rotatesAround = $sheep?.skeleton?.getRotationPointByName(clickedItem.name);
-				if (rotatesAround) {
+				const combinedAngle = $sheep?.skeleton?.getCombinedAngleByName(clickedItem.name);
+
+				if (rotatesAround && typeof combinedAngle !== 'undefined') {
 					const distance = rotatesAround.getDistance(event.point);
-					//const angle = rotatesAround.add(event.point)?.angle;
-					const angle = event.point.subtract(rotatesAround)?.angle;
+					const angle = event.point.subtract(rotatesAround)?.angle - combinedAngle;
 					$paperState.eventVector.distance = distance;
 					$paperState.eventVector.angle = angle;
+					$paperState.eventVector.angleCombined = combinedAngle;
+					//console.log('roratesAround', rotatesAround.x);
+
 					if (distance && angle) {
 						const validDistance = limb.length.isValid(distance);
 						const validAngle = limb.angle.isValid(angle);
 						vectorChecker(rotatesAround, event.point, validDistance, validAngle);
+
 						if (validDistance && validAngle) {
 							limb.length.last = distance;
 							limb.angle.last = angle;

@@ -1,28 +1,28 @@
 import paper from 'paper';
 import head from '$lib/sheep/head.svg';
-import type { Limb, Skeleton } from '$lib/stores/sheep';
+import type { Skeleton } from '$lib/stores/sheep';
 import type { paperState } from '$lib/editor/paper/paper.store';
 import { onFrame } from './editor';
 import { vectorHelper, getLayerByName } from './helpers';
 
-export function setupSheep(skeleton: Limb, paperState: paperState): Limb {
+export function setupSheep(skeleton: Skeleton, paperState: paperState): Skeleton {
 	//importSkelletonDots();
 	getLayerByName('skeleton')?.remove();
 	const skeletonLayer = new paper.Layer();
 	skeletonLayer.name = 'skeleton';
-	renderLimb(skeleton);
+	renderLimb(skeleton, skeleton);
 	renderSkeletonVectors(skeleton, paperState);
 	addBody();
-	importHead();
+	//importHead();
 	onFrame();
 	return skeleton;
 }
-export function updateSheep(skeleton: Limb, paperState?: paperState): void {
+export function updateSheep(skeleton: Skeleton, paperState?: paperState): void {
 	//importSkelletonDots();
 	getLayerByName('skeleton')?.remove();
 	const skeletonLayer = new paper.Layer();
 	skeletonLayer.name = 'skeleton';
-	renderLimb(skeleton);
+	renderLimb(skeleton, skeleton);
 	renderSkeletonVectors(skeleton, paperState);
 }
 function importHead() {
@@ -37,17 +37,26 @@ function addBody() {
 }
 
 export function renderLimb(
-	limb: Skeleton | Limb,
-	rotationPoint: paper.Point = new paper.Point(0, 0)
+	skeleton: Skeleton,
+	limb: Skeleton,
+	rotationPoint = new paper.Point(0, 0)
 ): void {
-	const jointPoint = rotationPoint.add(
-		new paper.Point({ length: limb.length.last, angle: limb.angle.last })
-	);
+	if (!limb) return;
+	const combinedAngle = skeleton.getCombinedAngleByName(limb.name);
+	//console.log(limb.name, combinedAngle);
+	const limbPoint = new paper.Point({
+		length: limb.length.last,
+		angle: limb.angle.last
+	});
+	if (limb.name !== 'body') {
+		limbPoint.angle += combinedAngle;
+	}
+	const jointPoint = rotationPoint.add(limbPoint);
 	if (jointPoint) {
 		addJointMarker(jointPoint);
 		if (limb?.limbs?.length) {
 			limb.limbs.forEach((limb) => {
-				renderLimb(limb, jointPoint);
+				renderLimb(skeleton, limb, jointPoint);
 			});
 		}
 	}
@@ -59,32 +68,39 @@ export function renderLimb(
 		jointMarker.strokeColor = new paper.Color('#555');
 		jointMarker.strokeWidth = 2;
 		jointMarker.visible = true;
+		jointMarker.opacity = 0.25;
 	}
 }
-export function renderSkeletonVectors(skeleton: Limb, paperState?: paperState): void {
-	//reset Layer
+export function renderSkeletonVectors(skeleton: Skeleton, paperState?: paperState): void {
+	//remove Layer
 	getLayerByName('skeletonVectors')?.remove();
-	const skeletonLayer = new paper.Layer();
-	skeletonLayer.name = 'skeletonVectors';
 	if (paperState?.renderSkeletonVectors) {
+		const skeletonLayer = new paper.Layer();
+		skeletonLayer.name = 'skeletonVectors';
 		//render vector helper for every bodypart
-		renderLimbVectors(skeleton);
+		renderLimbVectors(skeleton, skeleton);
 	}
 }
 export function renderLimbVectors(
-	limb: Skeleton | Limb,
-	rotationPoint: paper.Point = new paper.Point(0, 0)
+	skeleton: Skeleton,
+	limb: Skeleton,
+	rotationPoint = new paper.Point(0, 0)
 ): void {
-	//console.log(limb.name);
-
-	const jointPoint = rotationPoint.add(
-		new paper.Point({ length: limb.length.last, angle: limb.angle.last })
-	);
+	if (!limb) return;
+	const combinedAngle = skeleton.getCombinedAngleByName(limb.name);
+	const limbPoint = new paper.Point({
+		length: limb.length.last,
+		angle: limb.angle.last
+	});
+	if (limb.name !== 'body') {
+		limbPoint.angle += combinedAngle;
+	}
+	const jointPoint = rotationPoint.add(limbPoint);
 	vectorHelper(rotationPoint, jointPoint);
 
 	if (limb?.limbs?.length) {
 		limb.limbs.forEach((limb) => {
-			renderLimbVectors(limb, jointPoint);
+			renderLimbVectors(skeleton, limb, jointPoint);
 		});
 	}
 }
