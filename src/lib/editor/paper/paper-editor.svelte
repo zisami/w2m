@@ -1,21 +1,22 @@
 <script lang="ts">
 	import paper from 'paper';
 	import PaperTools from './paper-tools.svelte';
-	import { setupSheep, renderSkeleton, renderSkeletonVectors } from './setup';
+	import { setupSheep, updateSheep } from './setup';
 	import { sheep } from '$lib/stores/sheep';
 	import { paperState } from './paper.store';
 
 	$: $paperState, updatePaper();
-
+	$: $sheep, updatePaper();
 	function usePaper(canvas: HTMLCanvasElement) {
 		paper.setup(canvas);
-		$sheep.skeleton = setupSheep($sheep.skeletonConfig, $paperState);
+		if ($sheep.skeleton) {
+			$sheep.skeleton = setupSheep($sheep.skeleton, $paperState);
+		}
 		paper.view.update();
 	}
 	function updatePaper() {
-		if($sheep?.skeleton){
-			renderSkeleton($sheep.skeleton);
-			renderSkeletonVectors($sheep.skeleton, $paperState);
+		if ($sheep?.skeleton && paper.project) {
+			updateSheep($sheep.skeleton, $paperState);
 		}
 	}
 </script>

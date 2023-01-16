@@ -1,18 +1,18 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import paper from 'paper';
-	import { sheep, type SkeletonJoint } from '$lib/stores/sheep';
+	import { sheep, Skeleton } from '$lib/stores/sheep';
 	import { paperState } from '$lib/editor/paper/paper.store';
-	import { vectorHelper, vectorChecker, getLayerByName } from '../helpers';
+	import { vectorChecker, getLayerByName } from '../helpers';
 	import { updateSheep } from '../setup';
 	interface moveLayer extends paper.Tool {
 		name: string;
 	}
-
+	paper.Tool;
 	const toolName = 'moveSkeleton';
-	let clickedLayer: paper.Layer | null = null;
 	let clickedItem: paper.Item | null = null;
-	let rotatesAround: string | null = null;
+	let limb: Skeleton | null = null;
+	let limbChain: Skeleton[] | null = null;
 
 	onMount(() => {
 		const tool: moveLayer = new paper.Tool();
@@ -22,50 +22,51 @@
 			let hitResult = paper.project.hitTest(event.point);
 			if (hitResult?.item?.name) {
 				clickedItem = hitResult.item;
-				rotatesAround = $sheep?.skeleton?.[clickedItem.name]?.rotatesAround || null;
-				$paperState.eventVektor.itemName = clickedItem.name;
-				$paperState.eventVektor.jointName = rotatesAround;
+				$paperState.eventVector.itemName = clickedItem.name;
+				limb = $sheep.skeleton?.getLimbByName(clickedItem.name) || null;
+				limbChain = $sheep.skeleton?.getLimbChainByName(clickedItem.name) || null;
+				$paperState.eventVector.jointName = limbChain?.reverse()?.[1]?.name || '';
+				$paperState.eventVector.limbChain =
+					limbChain
+						?.map((limb) => limb.name)
+						?.reverse()
+						?.join(' -> ') || '';
 			}
 		};
 
 		tool.onMouseDrag = function (event: paper.ToolEvent) {
-			if (clickedItem && rotatesAround) {
-				const joint = $sheep?.skeleton?.[rotatesAround];
-				if (joint) {
-					const distance = joint.point.getDistance(event.point);
-					const angle = event.point.subtract(joint.point)?.angle;
+			if (clickedItem && limb && limbChain) {
+				const rotatesAround = $sheep?.skeleton?.getRotationPointByName(clickedItem.name);
+				const combinedAngle = $sheep?.skeleton?.getCombinedAngleByName(clickedItem.name);
 
-					if (
-						isValidDistance(distance, joint) &&
-						isValidAngle(angle, joint) &&
-						$sheep?.skeleton?.[clickedItem.name]
-					) {
-						console.log('Distance', distance.toFixed(0), 'lenght', $sheep.skeleton[clickedItem.name].point.length.toFixed(0) );
-						console.log('Angle', angle.toFixed(0), 'angle', $sheep.skeleton[clickedItem.name].point.angle.toFixed(0) );
-						
-						$sheep.pointNew = {}
-						$sheep.pointNew[clickedItem.name] = joint.point.add({length:distance, angle})
-						$sheep.skeleton = updateSheep($sheep.skeleton, $sheep.pointNew, $paperState);
-					}
+				if (rotatesAround && typeof combinedAngle !== 'undefined') {
+					const distance = rotatesAround.getDistance(event.point);
+					const angle = event.point.subtract(rotatesAround)?.angle - combinedAngle;
+					$paperState.eventVector.distance = distance;
+					$paperState.eventVector.angle = angle;
+					$paperState.eventVector.angleCombined = combinedAngle;
+					//console.log('roratesAround', rotatesAround.x);
 
-					$paperState.eventVektor.distance = distance;
-					$paperState.eventVektor.angle = angle;
-					$paperState.eventVektor.isValidAngle = isValidAngle(angle, joint);
-					$paperState.eventVektor.isValidDistance = isValidDistance(distance, joint);
-					if ($paperState.renderEventVector) {
-						vectorChecker(
-							joint.point,
-							event.point,
-							isValidDistance(distance, joint),
-							isValidAngle(angle, joint)
-						);
+					if (distance && angle) {
+						const validDistance = limb.length.isValid(distance);
+						const validAngle = limb.angle.isValid(angle);
+						vectorChecker(rotatesAround, event.point, validDistance, validAngle);
+
+						if (validDistance && validAngle) {
+							limb.length.last = distance;
+							limb.angle.last = angle;
+
+							if ($sheep.skeleton) {
+								updateSheep($sheep.skeleton);
+							}
+						}
 					}
 				}
 			}
 		};
 		tool.onMouseUp = function () {
 			getLayerByName('eventVectors')?.remove();
-			console.log($sheep?.skeleton);
+			//console.log($sheep?.skeleton);
 		};
 
 		tool.activate();
@@ -80,18 +81,6 @@
 		paper.project.layers.find((layer) => layer.name === 'skeletonDots')?.bringToFront();
 		tool?.activate();
 	};
-	/**Check if the distance is within the bounds of the skeleton and if so return true.*/
-	function isValidDistance(distance: number, joint: SkeletonJoint): boolean {
-		return distance >= joint.length.min && distance <= joint.length.max;
-	}
-
-	/**Check if angle is within the bounds of the skeleton */
-	function isValidAngle(angle: number, joint: SkeletonJoint): boolean {
-		if (angle >= 0) {
-			return angle >= joint.angle.min && angle <= joint.angle.max;
-		}
-		return angle <= joint.angle.min && angle >= joint.angle.max;
-	}
 </script>
 
 <button class="btn btn-primary" on:click={onActivate} on:keydown={onActivate}>Skeleton</button>

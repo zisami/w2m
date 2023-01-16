@@ -5,12 +5,14 @@ export function getLayerByName(name: string): paper.Layer | null {
 	return paper.project.layers.find((layer) => layer.name === name) || null;
 }
 
-type vectorHelperValues = {
-	fixLength: boolean;
-	fixAngle: boolean;
-	showCircle: boolean;
-	showAngleLength: boolean;
-	showCoordinates: boolean;
+export type vectorHelperValues = {
+	fixLength?: boolean;
+	fixAngle?: boolean;
+	showCircle?: boolean;
+	showAngleLength?: boolean;
+	showCoordinates?: boolean;
+	showLength?: boolean;
+	showAngle?: boolean;
 	x?: number;
 	y?: number;
 	length?: number;
@@ -27,20 +29,17 @@ export function vectorHelper(
 		fixLength: false,
 		fixAngle: false,
 		showCircle: false,
-		showAngleLength: true,
-		showCoordinates: true
+		showAngleLength: false,
+		showCoordinates: false
 	};
 
 	const vectorStart: paper.Point = startPoint;
-	const vectorPrevious: paper.Point = endPoint;
 	let vectorItem: paper.Item | null,
 		items: paper.Item[],
 		dashedItems: paper.Item[],
 		vector: paper.Point;
 
 	processVector(vectorStart, true, isValidDistance, isValidAngle);
-	//console.log(startPoint, endPoint);
-
 	function processVector(
 		point: paper.Point,
 		drag: boolean,
@@ -48,7 +47,7 @@ export function vectorHelper(
 		isValidAngle = false
 	) {
 		vector = endPoint.subtract(startPoint);
-		if (vectorPrevious) {
+		/*if (vectorPrevious) {
 			if (values.fixLength && values.fixAngle) {
 				vector = vectorPrevious;
 			} else if (values.fixLength) {
@@ -56,7 +55,7 @@ export function vectorHelper(
 			} else if (values.fixAngle) {
 				vector = vector.project(vectorPrevious);
 			}
-		}
+		}*/
 		drawVector(false, isValidDistance, isValidAngle);
 	}
 
@@ -71,10 +70,17 @@ export function vectorHelper(
 		if (vectorItem) vectorItem.remove();
 		items = [];
 		const arrowVector = vector.normalize(10);
+		const arrowVectorL = arrowVector.rotate(135);
+		const arrowVectorR = arrowVector.rotate(-135);
+
 		const end = vectorStart.add(vector);
+
 		vectorItem = new paper.Group([
 			new paper.Path([vectorStart, end]),
-			new paper.Path([end.add(arrowVector.rotate(135)), end, end.add(arrowVector.rotate(-135))])
+			new paper.Group([
+				new paper.Path([end.add(arrowVectorR), end]),
+				new paper.Path([end.add(arrowVectorL), end])
+			])
 		]);
 		vectorItem.strokeWidth = 0.75;
 		vectorItem.children[0].strokeColor = new paper.Color(
@@ -147,14 +153,10 @@ export function vectorHelper(
 		);
 		if (label) {
 			// Angle Label
-			const text = new paper.PointText(
-				center
-					.add(through)
-					.normalize(radius + 10)
-					.add(new paper.Point(0, 3))
-			);
+			const text = new paper.PointText(center.add(through).add(new paper.Point(0, 3)));
 			text.content = Math.floor(vector.angle * 100) / 100 + '°';
 			text.fillColor = new paper.Color('black');
+			text.fontSize = 8;
 			items.push(text);
 		}
 	}
@@ -195,7 +197,8 @@ export function vectorHelper(
 				point: middle.add(awayVector.normalize(away + lengthSize)),
 				content: (prefix || '') + Math.floor(value * 1000) / 1000,
 				fillColor: 'black',
-				justification: 'center'
+				justification: 'center',
+				fontSize: 8
 			});
 			text.rotate(textAngle);
 			items.push(text);
