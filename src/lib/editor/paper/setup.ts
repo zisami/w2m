@@ -1,6 +1,6 @@
 import paper from 'paper';
 import head from '$lib/sheep/head.svg';
-import type { Skeleton } from '$lib/stores/sheep';
+import type Skeleton from '$lib/animal/skeleton';
 import type { paperState } from '$lib/editor/paper/paper.store';
 import { onFrame } from './editor';
 import { vectorHelper, getLayerByName } from './helpers';

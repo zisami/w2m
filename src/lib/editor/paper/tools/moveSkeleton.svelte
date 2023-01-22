@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import paper from 'paper';
-	import { sheep, Skeleton } from '$lib/stores/sheep';
+	import { sheep } from '$lib/stores/sheep.state';
+	import type { Skeleton } from '$lib/animal/skeleton';
 	import { paperState } from '$lib/editor/paper/paper.store';
 	import { vectorChecker, getLayerByName } from '../helpers';
 	import { updateSheep } from '../setup';

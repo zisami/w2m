@@ -11,7 +11,7 @@
 	import SceneSetup from './scene-setup.svelte';
 
 	import { state3D } from '$lib/product-viewer/state3D';
-	import { sheep } from '$lib/stores/sheep';
+	import { sheep } from '$lib/stores/sheep.state';
 	import svgFilePath from '$lib/assets/img/sheep.svg';
 
 	import type { SVGResult } from 'three/examples/jsm/loaders/SVGLoader.js';

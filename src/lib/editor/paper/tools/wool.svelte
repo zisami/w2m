@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import paper from 'paper';
-	import { sheep } from '$lib/stores/sheep';
+	import { sheep } from '$lib/stores/sheep.state';
 	import { getLayerByName } from '../helpers';
 
 	interface ToolEventExtended extends paper.ToolEvent {

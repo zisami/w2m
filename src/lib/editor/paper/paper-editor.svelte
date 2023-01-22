@@ -2,7 +2,7 @@
 	import paper from 'paper';
 	import PaperTools from './paper-tools.svelte';
 	import { setupSheep, updateSheep } from './setup';
-	import { sheep } from '$lib/stores/sheep';
+	import { sheep } from '$lib/stores/sheep.state';
 	import { paperState } from './paper.store';
 
 	$: $paperState, updatePaper();
