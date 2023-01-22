@@ -53,9 +53,13 @@
 						const validAngle = limb.angle.isValid(angle);
 						vectorChecker(rotatesAround, event.point, validDistance, validAngle);
 
-						if (validDistance && validAngle) {
-							limb.length.last = distance;
-							limb.angle.last = angle;
+						if (validDistance || validAngle) {
+							if (validDistance) {
+								limb.length.last = distance;
+							}
+							if (validAngle) {
+								limb.angle.last = angle;
+							}
 
 							if ($sheep.skeleton) {
 								updateSheep($sheep.skeleton);
