@@ -1,13 +1,56 @@
-import type { valueRange } from './limb';
+import type { valueRange, iPose } from './animal.d';
 
-export interface iPose {
-	[key: string]: string | valueRange | iPose[] | undefined | null;
-	name: string;
-	length: valueRange;
-	angle: valueRange;
-	limbs: iPose[];
-}
-
+const upperLeg = {
+	length: <valueRange>{
+		min: 75,
+		init: 75,
+		max: 75
+	},
+	angleFront: {
+		min: -15,
+		init: 45,
+		max: 135
+	},
+	angleRear: {
+		min: 0,
+		init: 120,
+		max: 135
+	}
+};
+const lowerLeg = {
+	length: <valueRange>{
+		min: 40,
+		init: 40,
+		max: 40
+	},
+	angleFront: {
+		min: 0,
+		init: 15,
+		max: 135
+	},
+	angleRear: {
+		min: -180,
+		init: -45,
+		max: 0
+	}
+};
+const foot = {
+	length: <valueRange>{
+		min: 20,
+		init: 20,
+		max: 20
+	},
+	angleFront: {
+		min: 0,
+		init: 20,
+		max: 135
+	},
+	angleRear: {
+		min: 0,
+		init: 45,
+		max: 135
+	}
+};
 export const pose: iPose = {
 	name: 'body',
 	length: {
@@ -63,42 +106,18 @@ export const pose: iPose = {
 						},
 						{
 							name: 'knee_FR',
-							length: {
-								min: 50,
-								init: 75,
-								max: 100
-							},
-							angle: {
-								min: -15,
-								init: 45,
-								max: 135
-							},
+							length: upperLeg.length,
+							angle: upperLeg.angleFront,
 							limbs: [
 								{
 									name: 'ankle_FR',
-									length: {
-										min: 20,
-										init: 40,
-										max: 60
-									},
-									angle: {
-										min: 0,
-										init: 15,
-										max: 135
-									},
+									length: lowerLeg.length,
+									angle: lowerLeg.angleFront,
 									limbs: [
 										{
 											name: 'foot_FR',
-											length: {
-												min: 10,
-												init: 20,
-												max: 30
-											},
-											angle: {
-												min: 0,
-												init: 20,
-												max: 135
-											},
+											length: foot.length,
+											angle: foot.angleFront,
 											limbs: []
 										}
 									]
@@ -107,37 +126,17 @@ export const pose: iPose = {
 						},
 						{
 							name: 'knee_FL',
-							length: {
-								min: 50,
-								init: 75,
-								max: 100
-							},
-							angle: {
-								min: -15,
-								init: 90,
-								max: 135
-							},
+							length: upperLeg.length,
+							angle: { ...upperLeg.angleFront, init: 90 },
 							limbs: [
 								{
 									name: 'ankle_FL',
-									length: {
-										min: 20,
-										init: 40,
-										max: 60
-									},
-									angle: {
-										min: 0,
-										init: 15,
-										max: 135
-									},
+									length: lowerLeg.length,
+									angle: { ...lowerLeg.angleFront, init: 15 },
 									limbs: [
 										{
 											name: 'foot_FL',
-											length: {
-												min: 10,
-												init: 20,
-												max: 30
-											},
+											length: foot.length,
 											angle: {
 												min: 0,
 												init: 20,
@@ -153,42 +152,18 @@ export const pose: iPose = {
 				},
 				{
 					name: 'knee_RR',
-					length: {
-						min: 50,
-						init: 75,
-						max: 100
-					},
-					angle: {
-						min: 0,
-						init: 120,
-						max: 135
-					},
+					length: upperLeg.length,
+					angle: upperLeg.angleRear,
 					limbs: [
 						{
 							name: 'ankle_RR',
-							length: {
-								min: 20,
-								init: 40,
-								max: 60
-							},
-							angle: {
-								min: -180,
-								init: -45,
-								max: 0
-							},
+							length: lowerLeg.length,
+							angle: lowerLeg.angleRear,
 							limbs: [
 								{
 									name: 'foot_RR',
-									length: {
-										min: 10,
-										init: 20,
-										max: 30
-									},
-									angle: {
-										min: 0,
-										init: 45,
-										max: 135
-									},
+									length: foot.length,
+									angle: foot.angleRear,
 									limbs: []
 								}
 							]

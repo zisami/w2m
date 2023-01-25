@@ -1,8 +1,4 @@
-export type valueRange = {
-	min: number;
-	init: number;
-	max: number;
-};
+import type { valueRange } from './animal.d';
 
 export class LimbParam {
 	#min: number;
