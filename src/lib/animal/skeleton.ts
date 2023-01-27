@@ -1,7 +1,8 @@
 //import all needed classes
 import { LimbParam } from './limb';
-import type { iPose } from './pose';
+import type { iPose } from './animal.d';
 import paper from 'paper';
+import type { paperState } from '$lib/editor/paper/paper.store';
 
 export default class Skeleton {
 	name: string;
@@ -33,6 +34,7 @@ export default class Skeleton {
 	}
 	getLimbByName(name: string, limbsToSearch?: Skeleton[]): Skeleton | null {
 		if (!limbsToSearch) limbsToSearch = this.limbs;
+
 		for (const nextLimb of limbsToSearch) {
 			if (nextLimb.name === name) return nextLimb;
 			if (nextLimb?.limbs?.length) {
@@ -105,5 +107,37 @@ export default class Skeleton {
 				}, 0);
 		}
 		return rotationAngle;
+	}
+	getAbsolutePointByName(name: string, limbsToSearch?: Skeleton[]): paper.Point {
+		const limbChain = this.getLimbChainByName(name, limbsToSearch);
+		const limb = limbChain?.[limbChain.length - 1];
+		let startPoint = new paper.Point(0, 0);
+
+		startPoint = startPoint.add(
+			new paper.Point({
+				length: this?.length?.last,
+				angle: this?.angle?.last || 0
+			})
+		);
+
+		if (!limbChain?.length) return startPoint;
+
+		const point = limbChain.reduce(
+			(lastPoint: paper.Point, nextLimb: Skeleton, index: number, array): paper.Point => {
+				const combinedAngle = this.getCombinedAngleByName(array?.[index]?.name) || 0;
+
+				console.table({
+					name: array?.[index]?.name,
+					length: nextLimb.length.last,
+					angle: nextLimb.angle.last
+				});
+				return lastPoint.add({
+					length: nextLimb.length.last,
+					angle: combinedAngle + nextLimb.angle.last
+				});
+			},
+			startPoint
+		);
+		return point;
 	}
 }

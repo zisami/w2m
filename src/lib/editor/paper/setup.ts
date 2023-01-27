@@ -4,6 +4,7 @@ import type Skeleton from '$lib/animal/skeleton';
 import type { paperState } from '$lib/editor/paper/paper.store';
 import { onFrame } from './editor';
 import { vectorHelper, getLayerByName } from './helpers';
+import type { SheepState } from '$lib/stores/sheep.state';
 
 export function setupSheep(skeleton: Skeleton, paperState: paperState): Skeleton {
 	//importSkelletonDots();
@@ -25,6 +26,28 @@ export function updateSheep(skeleton: Skeleton, paperState?: paperState): void {
 	renderLimb(skeleton, skeleton);
 	renderSkeletonVectors(skeleton, paperState);
 }
+export function updateSheepV2(sheep: SheepState, paperState?: paperState): void {
+	if (!sheep?.skeleton) return;
+
+	drawBodyparts(sheep);
+	drawSkeleton(sheep, paperState);
+}
+function drawSkeleton(sheep: SheepState, paperState: paperState | undefined) {
+	if (!sheep?.skeleton) return;
+	getLayerByName('skeleton')?.remove();
+	const skeletonLayer = new paper.Layer();
+	skeletonLayer.name = 'skeleton';
+	renderLimb(sheep.skeleton, sheep.skeleton);
+	renderSkeletonVectors(sheep.skeleton, paperState);
+}
+
+function drawBodyparts(sheep: SheepState) {
+	getLayerByName('bodyparts')?.remove();
+	const bodypartsLayer = new paper.Layer();
+	bodypartsLayer.name = 'bodyparts';
+	sheep?.bodyParts?.forEach((part) => part?.draw());
+}
+
 function importHead() {
 	const layer = new paper.Layer();
 	layer.name = 'head';

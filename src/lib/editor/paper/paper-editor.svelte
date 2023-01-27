@@ -1,7 +1,7 @@
 <script lang="ts">
 	import paper from 'paper';
 	import PaperTools from './paper-tools.svelte';
-	import { setupSheep, updateSheep } from './setup';
+	import { setupSheep, updateSheepV2 } from './setup';
 	import { sheep } from '$lib/stores/sheep.state';
 	import { paperState } from './paper.store';
 
@@ -12,17 +12,18 @@
 		if ($sheep.skeleton) {
 			$sheep.skeleton = setupSheep($sheep.skeleton, $paperState);
 		}
+		$sheep?.bodyParts?.forEach((part) => part?.draw());
 		paper.view.update();
 	}
 	function updatePaper() {
 		if ($sheep?.skeleton && paper.project) {
-			updateSheep($sheep.skeleton, $paperState);
+			updateSheepV2($sheep, $paperState);
 		}
 	}
 </script>
 
-<div class="w-full h-full flex flex-col border-red-500 border">
-	<canvas class="bg-amber-300 aspect-[2/1.8] max-w-md" use:usePaper />
+<div class="flex flex-col">
+	<canvas class=" aspect-[2/1.8] max-w-md" use:usePaper />
 
 	<PaperTools />
 </div>
