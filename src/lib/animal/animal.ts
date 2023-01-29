@@ -12,6 +12,7 @@ export default class Animal {
 		this.skeleton = new Skeleton(pose);
 		this.bodyParts = this.initBodyParts(bodyPartsParams);
 	}
+	/**Writes the absolute start- and endposition to all bodypartsparams and initalizes them to Bodypart Instances*/
 	initBodyParts(bodyPartsParams: BodyPartParam[]): BodyPart[] {
 		const bodyParts = bodyPartsParams
 			.map((bodyPartParam) => {
@@ -27,9 +28,8 @@ export default class Animal {
 			});
 		return bodyParts;
 	}
+	/**Updates the absolute start- and endposition of all bodyparts*/
 	updateBodyParts(): void {
-		console.log(this.skeleton.getLimbByName('knee_FR'));
-
 		this.bodyParts.forEach((bodyPart) => {
 			bodyPart.startPoint = this.skeleton.getAbsolutePointByName(bodyPart.startPointName);
 			bodyPart.endPoint = this.skeleton.getAbsolutePointByName(bodyPart.endPointName);

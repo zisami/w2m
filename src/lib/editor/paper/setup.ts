@@ -31,7 +31,8 @@ export function updateAnimal(animalState: AnimalState, paperState?: paperState):
 	if (!animalState?.animal?.skeleton) return;
 	drawSkeleton(animalState.animal, paperState);
 	console.log('updateAnimalV2');
-	drawBodyparts(animalState.animal);
+	//drawBodyparts(animalState.animal);
+	drawOutline(animalState.animal);
 	drawSkeleton(animalState.animal, paperState);
 }
 function drawSkeleton(animal: Animal, paperState: paperState | undefined) {
@@ -44,28 +45,55 @@ function drawSkeleton(animal: Animal, paperState: paperState | undefined) {
 }
 
 function drawBodyparts(animal: Animal) {
+	console.log(paper.project.layers.map((layer) => layer.name));
+
 	getLayerByName('bodyparts')?.remove();
 	const bodypartsLayer = new paper.Layer();
 	bodypartsLayer.name = 'bodyparts';
 
-	console.log(animal.bodyParts[4].endPoint.x);
 	animal.updateBodyParts();
-	console.log(animal.bodyParts[4].endPoint.x);
 
-	animal?.bodyParts?.forEach((part) => part?.draw());
-	//combine all paths on Layer 'bodyparts' into one path
-	/*
-	const bodyparts = getLayerByName('bodyparts');
-	if (bodyparts) {
-		const bodypartsPath = bodyparts.children.reduce((acc, path) => {
-			acc.unite(path);
-			return acc;
-		}, new paper.Path());
-		bodypartsPath.fillColor = new paper.Color('#0000FF');
-	}
-	*/
+	const drawParams = {
+		fillColor: 'darkgreen',
+		strokeColor: 'blue',
+		opacity: 0.1
+	};
+	animal?.bodyParts?.forEach((part) => part?.draw(drawParams));
 }
+function drawOutline(animal: Animal) {
+	console.log(paper.project.layers.map((layer) => layer.name));
+	getLayerByName('helperLayer')?.remove();
+	const helperLayer = new paper.Layer();
+	helperLayer.name = 'helperLayer';
 
+	//animal.updateBodyParts();
+
+	const drawParams = {
+		//fillColor: 'darkblue',
+		opacity: 0.1
+	};
+	animal?.bodyParts?.forEach((part) => part?.draw(drawParams));
+	let outline = new paper.Path();
+	helperLayer.children.forEach((child) => {
+		if (child instanceof paper.Path) {
+			console.log('???');
+
+			outline = outline.unite(child);
+		}
+	});
+	outline.smooth();
+	outline.fillColor = new paper.Color('pink');
+	outline.strokeColor = new paper.Color('pink');
+	outline.strokeWidth = 4;
+	outline.opacity = 0.5;
+
+	getLayerByName('outlineLayer')?.remove();
+	const outlineLayer = new paper.Layer();
+	outlineLayer.name = 'outlineLayer';
+	outlineLayer.addChild(outline);
+
+	getLayerByName('helperLayer')?.remove();
+}
 function importHead() {
 	const layer = new paper.Layer();
 	layer.name = 'head';

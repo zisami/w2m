@@ -71,9 +71,8 @@ export class BodyPart {
 		return this.#endRadius;
 	}
 
-	draw(): void {
+	draw(params): void {
 		const bodypartVector = this.endPoint.subtract(this.startPoint);
-		const bodypartLength = bodypartVector.length;
 		const bodypartAngle = bodypartVector.angle;
 		//console.log(bodypartVector, bodypartLength, bodypartAngle);
 
@@ -94,10 +93,17 @@ export class BodyPart {
 		bodyPartOutline.arcBy(
 			new paper.Point({ length: this.startRadius * 2, angle: bodypartAngle - 90 })
 		);
-		//bodyPartOutline.closed = true;
-		//bodyPartOutline.smooth({ type: 'continuous', factor: 0.5 });
-		bodyPartOutline.fillColor = new paper.Color('green');
-		bodyPartOutline.opacity = 0.1;
-		//console.log('draw');
+		bodyPartOutline.closed = true;
+		if ('fillColor' in params) {
+			console.log('fillcolor');
+
+			bodyPartOutline.fillColor = new paper.Color(params.fillColor);
+		}
+		if ('strokeColor' in params) {
+			bodyPartOutline.strokeColor = new paper.Color(params.strokeColor);
+		}
+		if ('opacity' in params) {
+			bodyPartOutline.opacity = params.opacity;
+		}
 	}
 }

@@ -12,7 +12,6 @@
 		if ($animalState.animal.skeleton) {
 			$animalState.animal.skeleton = setupAnimal($animalState.animal.skeleton, $paperState);
 		}
-		$animalState.animal?.bodyParts?.forEach((part) => part?.draw());
 		paper.view.update();
 	}
 	function updatePaper() {
@@ -24,7 +23,6 @@
 
 <div class="flex flex-col">
 	<canvas class=" aspect-[2/1.8] max-w-md" use:usePaper />
-
 	<PaperTools />
 </div>
 
