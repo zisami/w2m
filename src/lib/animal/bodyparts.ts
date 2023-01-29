@@ -2,31 +2,40 @@ import paper from 'paper';
 
 export type BodyPartParam = {
 	name: string;
-	startPoint: paper.Point;
-	endPoint: paper.Point;
+	startPointName: string;
+	startPoint?: paper.Point;
 	startRadius: number;
+	endPointName: string;
+	endPoint?: paper.Point;
 	endRadius: number;
 };
 
-export const bodyParts: BodyPartParam[] = [
-	{
-		name: 'body',
-		startPoint: new paper.Point(0, 0),
-		endPoint: new paper.Point(200, 0),
-		startRadius: 50,
-		endRadius: 50
-	}
-];
-
 export class BodyPart {
 	#name: string;
+	#startPointName: string;
+	#endPointName: string;
 	#startPoint: paper.Point;
-	#endPoint: paper.Point;
 	#startRadius: number;
+	#endPoint: paper.Point;
 	#endRadius: number;
+
 	constructor(params: BodyPartParam) {
+		if (
+			!params.name ||
+			!params.startPointName ||
+			!params.endPointName ||
+			!params.startRadius ||
+			!params.endRadius ||
+			!params.startPoint ||
+			!params.endPoint
+		) {
+			throw new Error('BodyPart: missing parameter');
+		}
+
 		this.#name = params.name;
+		this.#startPointName = params.startPointName;
 		this.#startPoint = params.startPoint;
+		this.#endPointName = params.endPointName;
 		this.#endPoint = params.endPoint;
 		this.#startRadius = params.startRadius;
 		this.#endRadius = params.endRadius;
@@ -35,18 +44,33 @@ export class BodyPart {
 	get name(): string {
 		return this.#name;
 	}
+
 	get startPoint(): paper.Point {
 		return this.#startPoint;
 	}
-	get endPoint(): paper.Point {
-		return this.#endPoint;
+	set startPoint(point: paper.Point) {
+		this.#startPoint = point;
+	}
+	get startPointName(): string {
+		return this.#startPointName;
 	}
 	get startRadius(): number {
 		return this.#startRadius;
 	}
+
+	get endPointName(): string {
+		return this.#endPointName;
+	}
+	set endPoint(point: paper.Point) {
+		this.#endPoint = point;
+	}
+	get endPoint(): paper.Point {
+		return this.#endPoint;
+	}
 	get endRadius(): number {
 		return this.#endRadius;
 	}
+
 	draw(): void {
 		const bodypartVector = this.endPoint.subtract(this.startPoint);
 		const bodypartLength = bodypartVector.length;

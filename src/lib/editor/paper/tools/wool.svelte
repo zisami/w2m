@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import paper from 'paper';
-	import { sheep } from '$lib/stores/sheep.state';
+	import { svg } from '$lib/stores/svg.state';
 	import { getLayerByName } from '../helpers';
 
 	interface ToolEventExtended extends paper.ToolEvent {
@@ -44,15 +44,20 @@
 				bounds.strokeColor = new paper.Color('black');
 				bounds.strokeWidth = 2;
 				bounds.intersect(path);
+
 				const outline = paper.project.activeLayer.lastChild;
 				outline.fillColor = new paper.Color('grey');
 				console.log('aL:', paper.project.activeLayer.name);
 				paper.project.activeLayer.children = [outline];
+
 				const canvasSize = getCanvasSize(event.event.originalTarget);
 				const targetWidth = 200;
 				//console.log('cSize', cSize);
-				$sheep.scaleingFactor = targetWidth / canvasSize.width;
-				$sheep.svg = paper.project.exportSVG();
+				$svg.scaleingFactor = targetWidth / canvasSize.width;
+				const exportSVG = paper.project.exportSVG({ asString: false });
+				if (typeof exportSVG !== 'string') {
+					$svg.svg = exportSVG;
+				}
 			}
 		};
 

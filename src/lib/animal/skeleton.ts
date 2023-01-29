@@ -94,9 +94,6 @@ export default class Skeleton {
 		let rotationAngle = this.angle.last;
 		//add up all limbs till searched name is reached
 		if (limbChain?.length) {
-			//console.log(limbChain.map((limb: Skeleton): string => limb.name));
-			//console.log(limbChain.map((limb: Skeleton): number => limb.angle.last));
-
 			rotationAngle = limbChain
 				.map((limb: Skeleton): number => limb.angle.last)
 				.reduce((lastAngle: number, nextAngle: number, index: number, array: number[]): number => {
@@ -125,12 +122,6 @@ export default class Skeleton {
 		const point = limbChain.reduce(
 			(lastPoint: paper.Point, nextLimb: Skeleton, index: number, array): paper.Point => {
 				const combinedAngle = this.getCombinedAngleByName(array?.[index]?.name) || 0;
-
-				console.table({
-					name: array?.[index]?.name,
-					length: nextLimb.length.last,
-					angle: nextLimb.angle.last
-				});
 				return lastPoint.add({
 					length: nextLimb.length.last,
 					angle: combinedAngle + nextLimb.angle.last

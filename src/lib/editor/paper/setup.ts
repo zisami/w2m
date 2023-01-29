@@ -4,9 +4,10 @@ import type Skeleton from '$lib/animal/skeleton';
 import type { paperState } from '$lib/editor/paper/paper.store';
 import { onFrame } from './editor';
 import { vectorHelper, getLayerByName } from './helpers';
-import type { SheepState } from '$lib/stores/sheep.state';
+import type { AnimalState } from '$lib/stores/animal.state';
+import type Animal from '$lib/animal/animal';
 
-export function setupSheep(skeleton: Skeleton, paperState: paperState): Skeleton {
+export function setupAnimal(skeleton: Skeleton, paperState: paperState): Skeleton {
 	//importSkelletonDots();
 	getLayerByName('skeleton')?.remove();
 	const skeletonLayer = new paper.Layer();
@@ -18,7 +19,7 @@ export function setupSheep(skeleton: Skeleton, paperState: paperState): Skeleton
 	onFrame();
 	return skeleton;
 }
-export function updateSheep(skeleton: Skeleton, paperState?: paperState): void {
+export function updateAnimalOld(skeleton: Skeleton, paperState?: paperState): void {
 	//importSkelletonDots();
 	getLayerByName('skeleton')?.remove();
 	const skeletonLayer = new paper.Layer();
@@ -26,26 +27,43 @@ export function updateSheep(skeleton: Skeleton, paperState?: paperState): void {
 	renderLimb(skeleton, skeleton);
 	renderSkeletonVectors(skeleton, paperState);
 }
-export function updateSheepV2(sheep: SheepState, paperState?: paperState): void {
-	if (!sheep?.skeleton) return;
-
-	drawBodyparts(sheep);
-	drawSkeleton(sheep, paperState);
+export function updateAnimal(animalState: AnimalState, paperState?: paperState): void {
+	if (!animalState?.animal?.skeleton) return;
+	drawSkeleton(animalState.animal, paperState);
+	console.log('updateAnimalV2');
+	drawBodyparts(animalState.animal);
+	drawSkeleton(animalState.animal, paperState);
 }
-function drawSkeleton(sheep: SheepState, paperState: paperState | undefined) {
-	if (!sheep?.skeleton) return;
+function drawSkeleton(animal: Animal, paperState: paperState | undefined) {
+	if (!animal?.skeleton) return;
 	getLayerByName('skeleton')?.remove();
 	const skeletonLayer = new paper.Layer();
 	skeletonLayer.name = 'skeleton';
-	renderLimb(sheep.skeleton, sheep.skeleton);
-	renderSkeletonVectors(sheep.skeleton, paperState);
+	renderLimb(animal.skeleton, animal.skeleton);
+	renderSkeletonVectors(animal.skeleton, paperState);
 }
 
-function drawBodyparts(sheep: SheepState) {
+function drawBodyparts(animal: Animal) {
 	getLayerByName('bodyparts')?.remove();
 	const bodypartsLayer = new paper.Layer();
 	bodypartsLayer.name = 'bodyparts';
-	sheep?.bodyParts?.forEach((part) => part?.draw());
+
+	console.log(animal.bodyParts[4].endPoint.x);
+	animal.updateBodyParts();
+	console.log(animal.bodyParts[4].endPoint.x);
+
+	animal?.bodyParts?.forEach((part) => part?.draw());
+	//combine all paths on Layer 'bodyparts' into one path
+	/*
+	const bodyparts = getLayerByName('bodyparts');
+	if (bodyparts) {
+		const bodypartsPath = bodyparts.children.reduce((acc, path) => {
+			acc.unite(path);
+			return acc;
+		}, new paper.Path());
+		bodypartsPath.fillColor = new paper.Color('#0000FF');
+	}
+	*/
 }
 
 function importHead() {

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
 
 	import { Canvas, T, useLoader } from '@threlte/core';
 	import { degToRad } from 'three/src/math/MathUtils';
@@ -11,33 +12,36 @@
 	import SceneSetup from './scene-setup.svelte';
 
 	import { state3D } from '$lib/product-viewer/state3D';
-	import { sheep } from '$lib/stores/sheep.state';
+	import { animalState } from '$lib/stores/animal.state';
+	import { svg } from '$lib/stores/svg.state';
 	import svgFilePath from '$lib/assets/img/sheep.svg';
 
 	import type { SVGResult } from 'three/examples/jsm/loaders/SVGLoader.js';
 	import type { Shape } from 'three';
 
-	onMount(() => {
-		loader.load(svgFilePath, (svg) => {
-			$sheep.colors = svg.paths.map((path) => path.color);
-			shapesFromPaths = svg.paths.map((path) => SVGLoader.createShapes(path));
-		});
-	});
 	const loader = useLoader(SVGLoader, () => new SVGLoader());
 	let serializer;
 	if (typeof window !== 'undefined') {
 		serializer = new XMLSerializer();
 	}
 	let shapesFromPaths: SVGResult[] | Shape[] | Shape[][];
-	$: $sheep, svgToShapes();
+	$: $svg, svgToShapes();
+	$: $animalState, svgToShapes();
+	onMount(() => {
+		loader.load(svgFilePath, (svg) => {
+			$animalState.colors = svg.paths.map((path) => path.color);
+			$animalState.colors = svg.paths.map((path) => path.color);
+			shapesFromPaths = svg.paths.map((path) => SVGLoader.createShapes(path));
+		});
+	});
 
 	function svgToShapes() {
-		if ($sheep.svg) {
-			const svg = $sheep.svg.outerHTML;
+		const svgStore = get(svg);
+		if (svgStore.svg) {
+			const svg = svgStore.svg.outerHTML;
 			shapesFromPaths = [loader.parse(svg)?.paths?.map((path) => path?.toShapes(true))];
-			if ($sheep?.scaleingFactor) {
-				//console.log('scale to fit', $sheep.scaleingFactor);
-				$state3D.model.scale = $state3D.model.baseScale * $sheep.scaleingFactor;
+			if (svg?.scaleingFactor) {
+				$state3D.model.scale = $state3D.model.baseScale * svg.scaleingFactor;
 			}
 		}
 	}

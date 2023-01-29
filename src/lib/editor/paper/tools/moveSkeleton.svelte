@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import paper from 'paper';
-	import { sheep } from '$lib/stores/sheep.state';
+	import { animalState } from '$lib/stores/animal.state';
 	import type Skeleton from '$lib/animal/skeleton';
 	import { paperState } from '$lib/editor/paper/paper.store';
 	import { vectorChecker, getLayerByName } from '../helpers';
-	import { updateSheep } from '../setup';
+	import { updateAnimal } from '../setup';
 	interface moveLayer extends paper.Tool {
 		name: string;
 	}
@@ -24,8 +24,8 @@
 			if (hitResult?.item?.name) {
 				clickedItem = hitResult.item;
 				$paperState.eventVector.itemName = clickedItem.name;
-				limb = $sheep.skeleton?.getLimbByName(clickedItem.name) || null;
-				limbChain = $sheep.skeleton?.getLimbChainByName(clickedItem.name) || null;
+				limb = $animalState.animal.skeleton?.getLimbByName(clickedItem.name) || null;
+				limbChain = $animalState.animal.skeleton?.getLimbChainByName(clickedItem.name) || null;
 				$paperState.eventVector.jointName = limbChain?.reverse()?.[1]?.name || '';
 				$paperState.eventVector.limbChain =
 					limbChain
@@ -37,8 +37,12 @@
 
 		tool.onMouseDrag = function (event: paper.ToolEvent) {
 			if (clickedItem && limb && limbChain) {
-				const rotatesAround = $sheep?.skeleton?.getRotationPointByName(clickedItem.name);
-				const combinedAngle = $sheep?.skeleton?.getCombinedAngleByName(clickedItem.name);
+				const rotatesAround = $animalState.animal?.skeleton?.getRotationPointByName(
+					clickedItem.name
+				);
+				const combinedAngle = $animalState.animal?.skeleton?.getCombinedAngleByName(
+					clickedItem.name
+				);
 
 				if (rotatesAround && typeof combinedAngle !== 'undefined') {
 					const distance = rotatesAround.getDistance(event.point);
@@ -61,8 +65,8 @@
 								limb.angle.last = angle;
 							}
 
-							if ($sheep.skeleton) {
-								updateSheep($sheep.skeleton);
+							if ($animalState.animal.skeleton) {
+								updateAnimal($animalState.animal.skeleton);
 							}
 						}
 					}
@@ -71,7 +75,6 @@
 		};
 		tool.onMouseUp = function () {
 			getLayerByName('eventVectors')?.remove();
-			//console.log($sheep?.skeleton);
 		};
 
 		tool.activate();

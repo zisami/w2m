@@ -1,4 +1,4 @@
-import type { valueRange, iPose } from './animal.d';
+import type { valueRange, iPose } from '$lib/animal/animal.d';
 
 const upperLeg = {
 	length: <valueRange>{
