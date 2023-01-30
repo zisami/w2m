@@ -30,8 +30,8 @@ export function updateAnimalOld(skeleton: Skeleton, paperState?: paperState): vo
 export function updateAnimal(animalState: AnimalState, paperState?: paperState): void {
 	if (!animalState?.animal?.skeleton) return;
 	drawSkeleton(animalState.animal, paperState);
-	console.log('updateAnimalV2');
-	//drawBodyparts(animalState.animal);
+	//console.log('updateAnimalV2');
+	drawBodyparts(animalState.animal);
 	drawOutline(animalState.animal);
 	drawSkeleton(animalState.animal, paperState);
 }
@@ -45,7 +45,7 @@ function drawSkeleton(animal: Animal, paperState: paperState | undefined) {
 }
 
 function drawBodyparts(animal: Animal) {
-	console.log(paper.project.layers.map((layer) => layer.name));
+	//console.log(paper.project.layers.map((layer) => layer.name));
 
 	getLayerByName('bodyparts')?.remove();
 	const bodypartsLayer = new paper.Layer();
@@ -61,12 +61,12 @@ function drawBodyparts(animal: Animal) {
 	animal?.bodyParts?.forEach((part) => part?.draw(drawParams));
 }
 function drawOutline(animal: Animal) {
-	console.log(paper.project.layers.map((layer) => layer.name));
+	//console.log(paper.project.layers.map((layer) => layer.name));
 	getLayerByName('helperLayer')?.remove();
 	const helperLayer = new paper.Layer();
 	helperLayer.name = 'helperLayer';
 
-	//animal.updateBodyParts();
+	animal.updateBodyParts();
 
 	const drawParams = {
 		//fillColor: 'darkblue',
@@ -76,13 +76,11 @@ function drawOutline(animal: Animal) {
 	let outline = new paper.Path();
 	helperLayer.children.forEach((child) => {
 		if (child instanceof paper.Path) {
-			console.log('???');
-
 			outline = outline.unite(child);
 		}
 	});
-	outline.smooth();
-	outline.fillColor = new paper.Color('pink');
+	//outline.smooth();
+	//outline.fillColor = new paper.Color('pink');
 	outline.strokeColor = new paper.Color('pink');
 	outline.strokeWidth = 4;
 	outline.opacity = 0.5;
