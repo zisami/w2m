@@ -12,9 +12,23 @@ export function BodyPartParams(): BodyPartParam[] {
 		{
 			name: 'neck',
 			startPointName: 'shoulders',
-			endPointName: 'head',
-			startRadius: 50,
-			endRadius: 30
+			endPointName: 'neck',
+			startRadius: 40,
+			endRadius: 20
+		},
+		{
+			name: 'head',
+			startPointName: 'neck',
+			endPointName: 'nose',
+			startRadius: 40,
+			endRadius: 25
+		},
+		{
+			name: 'earbase_L',
+			startPointName: 'neck',
+			endPointName: 'earbase_L',
+			startRadius: 0,
+			endRadius: 0
 		},
 		{
 			name: 'upperArmRight',

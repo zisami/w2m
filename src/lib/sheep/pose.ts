@@ -126,7 +126,7 @@ export const pose: iPose = {
 					},
 					limbs: [
 						{
-							name: 'head',
+							name: 'neck',
 							length: {
 								min: 25,
 								init: 75,
@@ -137,7 +137,36 @@ export const pose: iPose = {
 								init: -45,
 								max: 75
 							},
-							limbs: []
+							limbs: [
+								{
+									name: 'nose',
+									length: {
+										min: 45,
+										init: 45,
+										max: 45
+									},
+									angle: {
+										min: -90,
+										init: 45,
+										max: 75
+									},
+									limbs: []
+								},
+								{
+									name: 'earbase_L',
+									length: {
+										min: 40,
+										init: 40,
+										max: 40
+									},
+									angle: {
+										min: -90,
+										init: -50,
+										max: 0
+									},
+									limbs: []
+								}
+							]
 						},
 						{
 							name: 'elbow_R',
